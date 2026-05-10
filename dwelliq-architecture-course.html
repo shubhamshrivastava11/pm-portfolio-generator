@@ -4,289 +4,303 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dwelliq — Architecture & Design Analysis</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* === Dwelliq Design System (exact match to globals.css) === */
     :root {
-      --navy: #1a1a2e;
-      --navy-light: #16213e;
-      --coral: #e94560;
-      --coral-light: #ff6b6b;
-      --cream: #f8f6f2;
-      --cream-dark: #eee9e0;
-      --text: #2d2d3a;
-      --text-light: #6b6b7b;
-      --accent-blue: #4a90d9;
-      --accent-green: #2ecc71;
-      --accent-purple: #9b59b6;
-      --accent-orange: #f39c12;
-      --accent-teal: #1abc9c;
-      --shadow: 0 4px 20px rgba(26,26,46,0.08);
-      --shadow-hover: 0 8px 30px rgba(26,26,46,0.15);
-      --radius: 14px;
+      --cream:     #FDFAF6;
+      --stone:     #F5F2EE;
+      --ink:       #0A0908;
+      --warm-grey: #5C5550;
+      --gold:      #C9974A;
+      --gold-dark: #B8863B;
+      --border:    #CCC8C0;
+      --sage:      #4A6A58;
+      --rust:      #8B3A2A;
+
+      /* Course-specific utility */
+      --accent-blue:   #4a90d9;
+      --accent-purple: #7c5cbf;
+      --accent-green:  #2e9e6e;
+      --shadow:        0 4px 24px rgba(10,9,8,0.07);
+      --shadow-hover:  0 8px 32px rgba(10,9,8,0.13);
+      --radius:        14px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'DM Sans', -apple-system, sans-serif;
-      color: var(--text); background: var(--cream); line-height: 1.75;
-      overflow-x: hidden;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: var(--ink); background: var(--cream);
+      line-height: 1.75; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    h1, h2, h3 { font-family: 'DM Serif Display', serif; font-weight: 400; }
-    code, pre {
-      font-family: 'DM Mono', 'Fira Code', monospace;
-      font-size: 0.85em;
-    }
+    h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; }
+    code, pre { font-family: 'DM Mono', 'Fira Code', monospace; }
 
     /* === NAV === */
     nav {
       position: fixed; top: 0; width: 100%; z-index: 100;
-      background: rgba(26,26,46,0.97); backdrop-filter: blur(12px);
+      background: rgba(10,9,8,0.95); backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 2rem;
     }
-    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
     .nav-inner {
       max-width: 1200px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between; height: 60px;
     }
-    .nav-logo { font-family: 'DM Serif Display'; font-size: 1.15rem; color: #fff; text-decoration: none; }
-    .nav-logo span { color: var(--coral-light); }
+    .nav-logo {
+      font-family: 'Cormorant Garamond'; font-size: 1.3rem; color: var(--cream);
+      text-decoration: none; letter-spacing: 0.04em;
+    }
+    .nav-logo span { color: var(--gold); }
     .nav-badge {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      background: rgba(233,69,96,0.2); color: var(--coral-light);
-      padding: 0.2rem 0.6rem; border-radius: 50px; margin-left: 0.75rem;
+      font-family: 'DM Mono'; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; background: rgba(201,151,74,0.15);
+      color: var(--gold); padding: 0.2rem 0.65rem; border-radius: 50px; margin-left: 0.75rem;
     }
     .nav-links { display: flex; gap: 1.75rem; list-style: none; }
     .nav-links a {
-      text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.8rem;
-      font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
-      transition: color 0.2s;
+      text-decoration: none; color: rgba(255,255,255,0.45); font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
 
     /* === HERO === */
     .hero {
-      min-height: 60vh; display: flex; align-items: center;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #0f3460 100%);
-      padding: 7rem 2rem 5rem; position: relative; overflow: hidden;
+      min-height: 65vh; display: flex; align-items: center;
+      background: var(--ink); padding: 8rem 2rem 5rem; position: relative; overflow: hidden;
     }
-    .hero::before {
-      content: ''; position: absolute; width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(233,69,96,0.12), transparent 70%);
-      top: -100px; right: -100px; border-radius: 50%; pointer-events: none;
+    .hero-grain {
+      position: absolute; inset: 0; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px; pointer-events: none;
     }
-    .hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero::after {
+      content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,151,74,0.08), transparent 70%);
+      top: -100px; right: -100px; pointer-events: none;
+    }
+    .hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
     .hero-eyebrow {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--coral-light); margin-bottom: 1.25rem;
+      font-family: 'DM Mono'; font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
     }
-    .hero h1 { font-size: 3rem; color: #fff; line-height: 1.15; margin-bottom: 1.25rem; }
-    .hero h1 em { color: var(--coral-light); font-style: normal; }
-    .hero-desc { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 600px; margin-bottom: 2.5rem; }
+    .hero h1 { font-size: 3.5rem; color: var(--cream); line-height: 1.1; margin-bottom: 1.25rem; }
+    .hero h1 em { color: var(--gold); font-style: italic; }
+    .hero-desc { font-size: 1.05rem; color: rgba(253,250,246,0.5); max-width: 620px; margin-bottom: 2.5rem; }
+    .hero-meta {
+      display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;
+      padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-meta-item { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+    .hero-meta-item strong { color: rgba(255,255,255,0.65); display: block; margin-bottom: 0.1rem; }
     .assumption-box {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: var(--radius); padding: 1.25rem 1.5rem;
+      background: rgba(201,151,74,0.07); border: 1px solid rgba(201,151,74,0.2);
+      border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-top: 1.5rem;
     }
     .assumption-box h4 {
-      font-family: 'DM Sans'; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent-orange); margin-bottom: 0.75rem;
+      font-family: 'DM Mono'; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem;
     }
     .assumption-box ul { list-style: none; }
     .assumption-box li {
-      font-size: 0.85rem; color: rgba(255,255,255,0.6); padding: 0.3rem 0;
-      padding-left: 1.25rem; position: relative;
+      font-size: 0.83rem; color: rgba(253,250,246,0.55); padding: 0.25rem 0;
+      padding-left: 1.1rem; position: relative;
     }
-    .assumption-box li::before { content: '▸'; position: absolute; left: 0; color: var(--accent-orange); }
+    .assumption-box li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
 
-    /* === LAYOUT === */
+    /* === PAGE LAYOUT === */
     .page-body { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
-    .doc-section { padding: 5rem 0; border-bottom: 1px solid rgba(26,26,46,0.08); }
+    .doc-section { padding: 5rem 0; border-bottom: 1px solid var(--border); }
     .doc-section:last-child { border-bottom: none; }
 
     .section-label {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--coral); margin-bottom: 0.6rem;
+      font-family: 'DM Mono'; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem;
     }
-    .section-title { font-size: 2.1rem; color: var(--navy); margin-bottom: 0.75rem; line-height: 1.2; }
-    .section-lead { font-size: 1.05rem; color: var(--text-light); max-width: 700px; margin-bottom: 2.5rem; line-height: 1.7; }
+    .section-title { font-size: 2.4rem; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.15; }
+    .section-lead { font-size: 1.02rem; color: var(--warm-grey); max-width: 680px; margin-bottom: 2.75rem; }
 
     /* === PROSE === */
-    .prose p { color: var(--text); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; }
+    .prose p { font-size: 0.94rem; color: var(--ink); line-height: 1.82; margin-bottom: 1rem; }
+    .prose p strong { color: var(--ink); font-weight: 700; }
     .prose p:last-child { margin-bottom: 0; }
-    .prose strong { color: var(--navy); font-weight: 700; }
-
-    /* === CALLOUT STEPS === */
-    .callout-steps { counter-reset: callout; margin: 2rem 0; }
-    .callout-step {
-      display: flex; gap: 1.25rem; margin-bottom: 1.25rem; align-items: flex-start;
-    }
-    .callout-num {
-      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
-      background: var(--coral); color: #fff; font-size: 0.85rem; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'DM Sans'; margin-top: 0.1rem;
-    }
-    .callout-body { flex: 1; }
-    .callout-body strong { font-size: 0.95rem; color: var(--navy); display: block; margin-bottom: 0.2rem; }
-    .callout-body p { font-size: 0.88rem; color: var(--text-light); margin: 0; line-height: 1.65; }
-    .callout-where {
-      display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; padding: 0.15rem 0.55rem; border-radius: 50px;
-      margin-left: 0.5rem; vertical-align: middle;
-    }
-    .where-client { background: rgba(74,144,217,0.12); color: var(--accent-blue); }
-    .where-edge { background: rgba(26,188,156,0.12); color: var(--accent-teal); }
-    .where-server { background: rgba(155,89,182,0.12); color: var(--accent-purple); }
-    .where-external { background: rgba(243,156,18,0.12); color: var(--accent-orange); }
-    .where-error { background: rgba(233,69,96,0.1); color: var(--coral); }
 
     /* === ARCHITECTURE DIAGRAM === */
     .arch-diagram {
-      background: var(--navy); border-radius: var(--radius); padding: 2.5rem;
+      background: var(--ink); border-radius: var(--radius); padding: 2.5rem;
       margin: 2rem 0; overflow-x: auto;
     }
     .arch-boundary {
-      border: 1px dashed rgba(255,255,255,0.15); border-radius: 10px;
-      padding: 1.25rem; margin-bottom: 1rem; position: relative;
+      border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px;
+      padding: 1.25rem; margin-bottom: 0.75rem; position: relative;
     }
     .arch-boundary-label {
-      position: absolute; top: -0.55rem; left: 1rem; background: var(--navy);
-      padding: 0 0.5rem; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      position: absolute; top: -0.55rem; left: 1rem; background: var(--ink);
+      padding: 0 0.5rem; font-family: 'DM Mono'; font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.28);
     }
-    .arch-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin: 0.5rem 0; }
+    .arch-row { display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap; margin: 0.4rem 0; }
     .arch-box {
       padding: 0.6rem 1rem; border-radius: 8px; text-align: center;
-      font-size: 0.75rem; font-weight: 600; min-width: 100px;
-      border: 1.5px solid; font-family: 'DM Sans'; line-height: 1.4;
+      font-family: 'DM Sans'; font-size: 0.73rem; font-weight: 600;
+      min-width: 105px; border: 1.5px solid; line-height: 1.4;
     }
-    .arch-box small { display: block; font-size: 0.63rem; font-weight: 400; opacity: 0.7; margin-top: 0.15rem; }
-    .arch-client { background: rgba(74,144,217,0.12); border-color: rgba(74,144,217,0.5); color: #7ab8f0; }
-    .arch-engine { background: rgba(155,89,182,0.12); border-color: rgba(155,89,182,0.5); color: #c07de6; }
-    .arch-catalog { background: rgba(243,156,18,0.12); border-color: rgba(243,156,18,0.5); color: #f5b942; }
-    .arch-storage { background: rgba(46,204,113,0.12); border-color: rgba(46,204,113,0.5); color: #5de89b; }
-    .arch-infra { background: rgba(233,69,96,0.12); border-color: rgba(233,69,96,0.5); color: #f47088; }
-    .arch-external { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.55); }
-    .arch-arrow { color: rgba(255,255,255,0.25); font-size: 1rem; flex-shrink: 0; }
-    .arch-arrow-v { text-align: center; color: rgba(255,255,255,0.2); font-size: 1rem; margin: 0.35rem 0; }
-    .arch-label {
-      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-      color: rgba(255,255,255,0.3); margin-bottom: 0.5rem; padding-left: 0.25rem;
+    .arch-box small { display: block; font-family: 'DM Mono'; font-size: 0.6rem; font-weight: 400; opacity: 0.65; margin-top: 0.2rem; }
+    .arch-client  { background: rgba(74,144,217,0.1);  border-color: rgba(74,144,217,0.45); color: #7ab8f0; }
+    .arch-engine  { background: rgba(124,92,191,0.1);  border-color: rgba(124,92,191,0.45); color: #a98be8; }
+    .arch-catalog { background: rgba(201,151,74,0.1);  border-color: rgba(201,151,74,0.45); color: #d4a85c; }
+    .arch-storage { background: rgba(74,106,88,0.15);  border-color: rgba(74,106,88,0.5);   color: #7aad8e; }
+    .arch-infra   { background: rgba(139,58,42,0.12);  border-color: rgba(139,58,42,0.45);  color: #c07060; }
+    .arch-external{ background: rgba(255,255,255,0.03);border-color: rgba(255,255,255,0.12);color: rgba(255,255,255,0.45); }
+    .arch-arrow   { color: rgba(255,255,255,0.2); font-size: 0.95rem; flex-shrink: 0; }
+    .arch-arrow-v { text-align: center; color: rgba(255,255,255,0.18); font-size: 1rem; margin: 0.35rem 0; }
+    .arch-layer-label {
+      font-family: 'DM Mono'; font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; padding-left: 0.2rem;
     }
     .security-note {
-      margin-top: 0.75rem; padding: 0.6rem 0.9rem;
-      background: rgba(233,69,96,0.08); border-radius: 6px; border-left: 2px solid var(--coral);
-      font-size: 0.72rem; color: rgba(255,255,255,0.5); font-family: 'DM Mono';
+      margin-top: 0.85rem; padding: 0.65rem 1rem;
+      background: rgba(201,151,74,0.07); border-radius: 6px;
+      border-left: 2px solid rgba(201,151,74,0.5);
+      font-family: 'DM Mono'; font-size: 0.7rem; color: rgba(255,255,255,0.45);
     }
-    .security-note span { color: var(--coral-light); font-weight: 600; }
+    .security-note span { color: var(--gold); font-weight: 500; }
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.75rem; }
+    .tech-badge {
+      padding: 0.3rem 0.8rem; border-radius: 50px;
+      font-family: 'DM Mono'; font-size: 0.68rem;
+      background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* === DATA FLOW === */
+    .flow-list { margin-top: 0.5rem; }
+    .flow-step { display: flex; gap: 1.25rem; margin-bottom: 0.9rem; position: relative; }
+    .flow-step:not(:last-child)::after {
+      content: ''; position: absolute; left: 15px; top: 34px;
+      width: 2px; height: calc(100% + 0.5rem); background: var(--border);
+    }
+    .flow-num {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--gold); color: var(--gold);
+      font-family: 'DM Mono'; font-size: 0.75rem; font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1; background: var(--cream);
+    }
+    .flow-content {
+      flex: 1; background: #fff; border-radius: var(--radius);
+      padding: 1.25rem 1.5rem; box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .flow-content strong { font-size: 0.92rem; color: var(--ink); display: block; margin-bottom: 0.3rem; }
+    .flow-content p { font-size: 0.85rem; color: var(--warm-grey); margin: 0; line-height: 1.65; }
+    .flow-where {
+      display: inline-block; font-family: 'DM Mono'; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.07em; text-transform: uppercase; padding: 0.12rem 0.5rem;
+      border-radius: 50px; margin-left: 0.5rem; vertical-align: middle;
+    }
+    .where-client   { background: rgba(74,144,217,0.1); color: #3a7bc8; }
+    .where-server   { background: rgba(124,92,191,0.1); color: #6b4fb0; }
+    .where-external { background: rgba(201,151,74,0.1); color: var(--gold-dark); }
+    .where-error    { background: rgba(139,58,42,0.1);  color: var(--rust); }
+    .flow-error {
+      margin-top: 0.75rem; padding: 0.6rem 0.9rem;
+      background: rgba(139,58,42,0.05); border-radius: 6px;
+      border-left: 2px solid rgba(139,58,42,0.3);
+    }
+    .flow-error strong { font-family: 'DM Mono'; font-size: 0.65rem; color: var(--rust); display: block; margin-bottom: 0.2rem; }
+    .flow-error p { font-size: 0.8rem; color: var(--warm-grey); margin: 0; }
+
+    /* === CODE BLOCKS === */
+    .code-block {
+      background: var(--ink); border-radius: 8px; padding: 1.1rem 1.25rem;
+      overflow-x: auto; margin-top: 0.85rem; border: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-block pre { color: #c9d1d9; font-size: 0.78rem; line-height: 1.7; white-space: pre; }
+    .ck  { color: #79c0ff; }  /* keyword */
+    .cs  { color: #a5d6ff; }  /* string */
+    .cg  { color: #56d364; }  /* value / green */
+    .co  { color: #d2a679; }  /* function — warm, matches gold */
+    .cm  { color: #8b949e; }  /* comment */
+    .cr  { color: #ff7b72; }  /* error / red */
+    .cy  { color: #e3b341; }  /* constant / yellow */
 
     /* === TRADEOFF CARDS === */
     .tradeoff-card {
       background: #fff; border-radius: var(--radius); padding: 2rem;
       box-shadow: var(--shadow); margin-bottom: 1.25rem;
-      border-top: 3px solid var(--coral);
+      border-top: 3px solid var(--gold);
       transition: transform 0.25s, box-shadow 0.25s;
+      border-left: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
     }
     .tradeoff-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-    .tradeoff-title { font-size: 1.1rem; color: var(--navy); margin-bottom: 1rem; }
-    .tradeoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem; }
+    .tradeoff-title { font-size: 1.15rem; color: var(--ink); margin-bottom: 1.1rem; }
+    .tradeoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.1rem; }
     .tradeoff-col h5 {
-      font-family: 'DM Sans'; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; margin-bottom: 0.5rem;
+      font-family: 'DM Mono'; font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;
     }
-    .tradeoff-chosen h5 { color: var(--accent-green); }
-    .tradeoff-rejected h5 { color: var(--text-light); }
-    .tradeoff-col p { font-size: 0.87rem; color: var(--text-light); line-height: 1.6; }
+    .tradeoff-chosen h5  { color: var(--sage); }
+    .tradeoff-rejected h5 { color: var(--warm-grey); }
+    .tradeoff-col p { font-size: 0.86rem; color: var(--warm-grey); line-height: 1.65; }
     .tradeoff-impact {
-      background: var(--cream); border-radius: 8px; padding: 0.75rem 1rem;
-      font-size: 0.82rem; color: var(--text); line-height: 1.6;
+      background: var(--stone); border-radius: 8px; padding: 0.75rem 1rem;
+      font-size: 0.83rem; color: var(--ink); line-height: 1.65;
     }
-    .tradeoff-impact strong { color: var(--navy); }
+    .tradeoff-impact strong { color: var(--ink); }
 
     /* === INSIGHT CARDS === */
     .insight-card {
       background: #fff; border-radius: var(--radius); padding: 2rem;
       box-shadow: var(--shadow); margin-bottom: 1.25rem;
+      border: 1px solid var(--border);
     }
     .insight-tag {
-      display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 0.2rem 0.65rem; border-radius: 50px;
-      margin-bottom: 1rem; font-family: 'DM Mono';
+      display: inline-block; font-family: 'DM Mono'; font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.65rem;
+      border-radius: 50px; margin-bottom: 1rem;
     }
-    .tag-security { background: rgba(233,69,96,0.1); color: var(--coral); }
-    .tag-perf { background: rgba(46,204,113,0.1); color: #1a9e55; }
-    .tag-ux { background: rgba(74,144,217,0.1); color: var(--accent-blue); }
-    .tag-data { background: rgba(155,89,182,0.1); color: var(--accent-purple); }
-    .tag-rendering { background: rgba(243,156,18,0.1); color: #c47a00; }
-    .insight-title { font-size: 1.05rem; color: var(--navy); margin-bottom: 0.75rem; }
-    .insight-body { font-size: 0.88rem; color: var(--text-light); line-height: 1.7; margin-bottom: 1rem; }
-    .insight-body strong { color: var(--text); }
-    .code-block {
-      background: var(--navy); border-radius: 8px; padding: 1.1rem 1.25rem;
-      overflow-x: auto; margin-top: 0.75rem;
-    }
-    .code-block pre { color: #c9d1d9; font-size: 0.8rem; line-height: 1.65; white-space: pre; }
-    .code-c { color: #79c0ff; }   /* keyword / blue */
-    .code-s { color: #a5d6ff; }   /* string / light blue */
-    .code-g { color: #56d364; }   /* value / green */
-    .code-o { color: #f0883e; }   /* function / orange */
-    .code-m { color: #d29922; }   /* comment / yellow */
-    .code-r { color: #ff7b72; }   /* error / red */
+    .tag-security  { background: rgba(139,58,42,0.1);  color: var(--rust); }
+    .tag-perf      { background: rgba(74,106,88,0.1);  color: var(--sage); }
+    .tag-ux        { background: rgba(74,144,217,0.1); color: var(--accent-blue); }
+    .tag-data      { background: rgba(124,92,191,0.1); color: var(--accent-purple); }
+    .tag-rendering { background: rgba(201,151,74,0.1); color: var(--gold-dark); }
+    .insight-title { font-size: 1.05rem; color: var(--ink); margin-bottom: 0.75rem; }
+    .insight-body  { font-size: 0.87rem; color: var(--warm-grey); line-height: 1.72; margin-bottom: 1rem; }
+    .insight-body strong { color: var(--ink); }
 
     /* === RISK TABLE === */
-    .risk-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 0.85rem; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .risk-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: #fff; }
     .risk-table th {
-      text-align: left; padding: 0.75rem 1rem;
-      background: var(--navy); color: rgba(255,255,255,0.7);
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-      font-family: 'DM Sans';
+      text-align: left; padding: 0.8rem 1rem;
+      background: var(--ink); color: rgba(253,250,246,0.6);
+      font-family: 'DM Mono'; font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
     }
-    .risk-table th:first-child { border-radius: 8px 0 0 0; }
-    .risk-table th:last-child { border-radius: 0 8px 0 0; }
-    .risk-table td { padding: 0.85rem 1rem; border-bottom: 1px solid rgba(26,26,46,0.06); vertical-align: top; }
+    .risk-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
     .risk-table tr:last-child td { border-bottom: none; }
-    .risk-table tr:nth-child(even) td { background: rgba(26,26,46,0.02); }
-    .risk-table tr:hover td { background: rgba(233,69,96,0.03); }
+    .risk-table tr:hover td { background: var(--stone); }
     .risk-cat {
-      display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 50px;
-      white-space: nowrap;
+      display: inline-block; font-family: 'DM Mono'; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 50px; white-space: nowrap;
     }
-    .cat-security { background: rgba(233,69,96,0.1); color: var(--coral); }
-    .cat-reliability { background: rgba(74,144,217,0.1); color: var(--accent-blue); }
-    .cat-cost { background: rgba(243,156,18,0.1); color: #c47a00; }
-    .cat-ux { background: rgba(46,204,113,0.1); color: #1a9e55; }
+    .cat-security    { background: rgba(139,58,42,0.1);  color: var(--rust); }
+    .cat-reliability { background: rgba(74,144,217,0.1); color: #3a7bc8; }
+    .cat-cost        { background: rgba(74,106,88,0.1);  color: var(--sage); }
+    .cat-ux          { background: rgba(201,151,74,0.1); color: var(--gold-dark); }
     .risk-level {
-      display: inline-block; font-size: 0.7rem; font-weight: 700;
-      padding: 0.1rem 0.4rem; border-radius: 4px;
+      display: inline-block; font-family: 'DM Mono'; font-size: 0.65rem;
+      font-weight: 500; padding: 0.1rem 0.4rem; border-radius: 4px;
     }
-    .level-high { background: rgba(233,69,96,0.15); color: var(--coral); }
-    .level-med { background: rgba(243,156,18,0.15); color: #c47a00; }
-    .level-low { background: rgba(46,204,113,0.15); color: #1a9e55; }
-
-    /* === DATA FLOW === */
-    .flow-step {
-      display: flex; gap: 1.25rem; margin-bottom: 1rem; position: relative;
-    }
-    .flow-step:not(:last-child)::after {
-      content: ''; position: absolute; left: 15px; top: 36px;
-      width: 2px; height: calc(100% + 0.5rem); background: rgba(26,26,46,0.08);
-    }
-    .flow-num {
-      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
-      background: #fff; border: 2px solid var(--coral); color: var(--coral);
-      font-size: 0.8rem; font-weight: 700; display: flex; align-items: center;
-      justify-content: center; font-family: 'DM Sans'; position: relative; z-index: 1;
-    }
-    .flow-content { flex: 1; background: #fff; border-radius: var(--radius); padding: 1.25rem 1.5rem; box-shadow: var(--shadow); }
-    .flow-content strong { font-size: 0.92rem; color: var(--navy); display: block; margin-bottom: 0.3rem; }
-    .flow-content p { font-size: 0.85rem; color: var(--text-light); margin: 0; line-height: 1.65; }
-    .flow-snippet { margin-top: 0.75rem; }
-    .flow-error { margin-top: 0.75rem; padding: 0.6rem 0.9rem; background: rgba(233,69,96,0.05); border-radius: 6px; border-left: 2px solid var(--coral); font-size: 0.8rem; color: var(--text-light); }
-    .flow-error strong { color: var(--coral); font-size: 0.75rem; display: block; margin-bottom: 0.2rem; }
+    .level-high { background: rgba(139,58,42,0.12); color: var(--rust); }
+    .level-med  { background: rgba(201,151,74,0.12); color: var(--gold-dark); }
+    .level-low  { background: rgba(74,106,88,0.12);  color: var(--sage); }
 
     /* === ANIMATIONS === */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-delay-1 { transition-delay: 0.08s; }
     .reveal-delay-2 { transition-delay: 0.16s; }
@@ -294,24 +308,28 @@
 
     /* === FOOTER === */
     footer {
-      background: var(--navy); color: rgba(255,255,255,0.35); font-size: 0.82rem;
-      text-align: center; padding: 3rem 2rem;
+      background: var(--ink); color: rgba(253,250,246,0.3);
+      font-size: 0.82rem; text-align: center; padding: 3rem 2rem;
     }
-    footer a { color: var(--coral-light); text-decoration: none; }
-    footer strong { color: rgba(255,255,255,0.6); }
+    footer a { color: var(--gold); text-decoration: none; }
+    footer strong { color: rgba(253,250,246,0.6); }
+    .footer-divider { margin: 0.5rem 0; }
+
+    /* === DIVIDER === */
+    .gold-rule { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
 
     /* === RESPONSIVE === */
     @media (max-width: 768px) {
       .tradeoff-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 2.1rem; }
+      .hero h1 { font-size: 2.4rem; }
       .arch-row { gap: 0.5rem; }
       .nav-links { display: none; }
-      .risk-table { display: block; overflow-x: auto; }
     }
     @media (max-width: 600px) {
       .page-body { padding: 0 1.25rem; }
       .doc-section { padding: 3.5rem 0; }
-      .hero { padding: 6rem 1.25rem 4rem; }
+      .hero { padding: 7rem 1.25rem 4rem; }
+      .hero h1 { font-size: 2rem; }
     }
   </style>
 </head>
@@ -320,7 +338,7 @@
 <!-- Navigation -->
 <nav id="navbar">
   <div class="nav-inner">
-    <a href="#hero" class="nav-logo">dwell<span>iq</span> <span class="nav-badge">Architecture Course</span></a>
+    <a href="#hero" class="nav-logo">dwell<span>iq</span> <span class="nav-badge">Architecture</span></a>
     <ul class="nav-links">
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#dataflow">Data Flow</a></li>
@@ -333,16 +351,23 @@
 
 <!-- Hero -->
 <div class="hero" id="hero">
+  <div class="hero-grain"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">Technical Course &mdash; Architecture &amp; Design Analysis</div>
-    <h1>How <em>Dwelliq</em> is built<br>and why it's built that way</h1>
-    <p class="hero-desc">A deep-dive into the system design of an AI home styling advisor — written for intermediate engineers and technical PMs who can read code but want architectural reasoning, not just implementation details.</p>
+    <div class="hero-eyebrow">Technical Course — Architecture &amp; Design Analysis</div>
+    <h1>How <em>Dwelliq</em> is built<br>and why every decision matters</h1>
+    <p class="hero-desc">A deep-dive for intermediate engineers and technical PMs — covering the real architecture, the actual scoring algorithm, the /api/click security pattern we implemented, and twelve concrete production risks with mitigations.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>Author</strong>Shubham Shrivastava</div>
+      <div class="hero-meta-item"><strong>Stack</strong>Next.js 16 · TypeScript · Tailwind v4 · Three.js</div>
+      <div class="hero-meta-item"><strong>Routes</strong>/ · /design · /recommendations · /api/click</div>
+      <div class="hero-meta-item"><strong>Catalog</strong>200 SKUs · 5 MVP categories</div>
+    </div>
     <div class="assumption-box">
-      <h4>&#9888; Design Assumptions (explicit)</h4>
+      <h4>Design Assumptions (explicit)</h4>
       <ul>
-        <li><strong>Persistence:</strong> sessionStorage is a deliberate MVP constraint — no auth or database layer in scope.</li>
-        <li><strong>Affiliate tracking:</strong> Production intent is a first-party <code>/api/click</code> redirect endpoint for logging clicks before forwarding to retailers.</li>
-        <li><strong>Scale:</strong> Vercel hobby/pro deployment; hundreds of concurrent users; 200-SKU catalog stays in-bundle for now.</li>
+        <li><strong>Persistence:</strong> sessionStorage is a deliberate MVP constraint — no auth or database. State key: <code>dwelliq_onboarding_v1</code>.</li>
+        <li><strong>Affiliate tracking:</strong> First-party <code>/api/click</code> route handler owns partner IDs via env vars. SKU is the only thing in the browser URL.</li>
+        <li><strong>Scale:</strong> Vercel hobby/pro; hundreds of concurrent users; 200-SKU catalog stays in-bundle. Next migration point: ~2,000 SKUs.</li>
       </ul>
     </div>
   </div>
@@ -350,528 +375,572 @@
 
 <div class="page-body">
 
-  <!-- ① Architecture -->
+  <!-- SECTION 1: ARCHITECTURE -->
   <div class="doc-section" id="architecture">
     <div class="section-label reveal">Section 01</div>
     <h2 class="section-title reveal">Architecture</h2>
-    <p class="section-lead reveal">A component map of every layer Dwelliq touches — what runs where, where state lives, and where the security boundary sits.</p>
+    <p class="section-lead reveal">Every component in the system, how they connect, where the security boundary sits, and what runs at the edge versus the origin.</p>
 
-    <!-- Diagram -->
     <div class="arch-diagram reveal">
 
-      <div class="arch-label">&#127758; Browser (Client)</div>
+      <div class="arch-layer-label" style="color:#7ab8f0;">▸ Browser — Client Route</div>
       <div class="arch-boundary">
-        <div class="arch-boundary-label">SECURITY BOUNDARY — no API keys cross this line</div>
+        <div class="arch-boundary-label">SECURITY BOUNDARY — affiliate partner IDs never cross this line</div>
         <div class="arch-row">
-          <div class="arch-box arch-client">Next.js App Shell<small>SSR + Hydration</small></div>
+          <div class="arch-box arch-client">/ Landing<br><small>Static · SSG</small></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-box arch-client">Onboarding Wizard<small>5-step React flow</small></div>
+          <div class="arch-box arch-client">/design<br><small>OnboardingFlow.tsx</small></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-box arch-client">Results View<small>A/B/C grid per category</small></div>
+          <div class="arch-box arch-client">/recommendations<br><small>Results grid · CSR</small></div>
         </div>
-        <div class="arch-arrow-v">↕</div>
+        <div class="arch-arrow-v">↕ React state + sessionStorage</div>
         <div class="arch-row">
-          <div class="arch-box arch-storage">sessionStorage<small>Onboarding context</small></div>
+          <div class="arch-box arch-storage">sessionStorage<br><small>dwelliq_onboarding_v1</small></div>
           <div class="arch-arrow">↔</div>
-          <div class="arch-box arch-storage">React State<small>Budget &amp; selections</small></div>
+          <div class="arch-box arch-storage">useState<br><small>Budget · selections</small></div>
+          <div class="arch-arrow">↔</div>
+          <div class="arch-box arch-storage">Three.js Canvas<br><small>dynamic(ssr:false)</small></div>
         </div>
-        <div class="arch-arrow-v">↓</div>
+        <div class="arch-arrow-v">↓ generateRecommendations(OnboardingData)</div>
         <div class="arch-row">
-          <div class="arch-box arch-engine">Budget Optimizer<small>recommendations.ts</small></div>
+          <div class="arch-box arch-engine">Budget Optimizer<br><small>recommendations.ts</small></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-box arch-engine">Style Matcher<small>Filter by style tags</small></div>
+          <div class="arch-box arch-engine">Style Matcher<br><small>p.styles.includes(style)</small></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-box arch-catalog">Product Catalog<small>200 SKUs — catalog.ts</small></div>
-        </div>
-      </div>
-
-      <div class="arch-arrow-v">↓ HTTP (affiliate click-out)</div>
-
-      <div class="arch-label">&#9729; Vercel Edge / Origin</div>
-      <div class="arch-boundary">
-        <div class="arch-boundary-label">EDGE FUNCTION — Next.js Route Handler</div>
-        <div class="arch-row">
-          <div class="arch-box arch-infra">CDN Edge<small>Static assets, ISR</small></div>
+          <div class="arch-box arch-engine">Tier Ranker<br><small>scoreProduct()</small></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-box arch-infra">/api/click<small>Click tracker + redirect</small></div>
+          <div class="arch-box arch-catalog">CATALOG<br><small>catalog.ts · 200 SKUs</small></div>
         </div>
         <div class="security-note">
-          <span>KEY RULE:</span> The /api/click handler logs the click server-side (sku, referrer, timestamp),
-          then issues a 302 redirect to the retailer affiliate URL.
-          Affiliate partner IDs live in server env vars — never in the client bundle.
+          <span>KEY RULE:</span> The browser only ever calls <code>/api/click?sku=sofa-001&amp;option=A</code>.
+          The affiliate partner tag (AFFILIATE_TAG_AMAZON etc.) lives in Vercel env vars — never in the bundle.
         </div>
       </div>
 
-      <div class="arch-arrow-v">↓ 302 Redirect</div>
+      <div class="arch-arrow-v">↓ GET /api/click?sku=&lt;id&gt;&amp;option=&lt;A|B|C&gt;</div>
 
-      <div class="arch-label">&#127758; External Retailers</div>
+      <div class="arch-layer-label" style="color:#c07060;">▸ Vercel Edge — Route Handler</div>
+      <div class="arch-boundary">
+        <div class="arch-boundary-label">SERVER — process.env.AFFILIATE_TAG_* only accessible here</div>
+        <div class="arch-row">
+          <div class="arch-box arch-infra">CDN Edge<br><small>Static assets · ISR</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box arch-infra">/api/click<br><small>SKU allowlist → 302</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box arch-infra">Click log<br><small>console → analytics</small></div>
+        </div>
+      </div>
+
+      <div class="arch-arrow-v">↓ 302 Redirect (affiliate URL with partner tag)</div>
+
+      <div class="arch-layer-label" style="color:rgba(255,255,255,0.35);">▸ External Retailers</div>
       <div class="arch-boundary">
         <div class="arch-row">
-          <div class="arch-box arch-external">Amazon<small>Affiliate redirect</small></div>
+          <div class="arch-box arch-external">Amazon<br><small>?tag=dwelliq-20</small></div>
           <div class="arch-arrow">·</div>
-          <div class="arch-box arch-external">Wayfair<small>Affiliate redirect</small></div>
+          <div class="arch-box arch-external">Wayfair<br><small>Affiliate redirect</small></div>
           <div class="arch-arrow">·</div>
-          <div class="arch-box arch-external">IKEA<small>Affiliate redirect</small></div>
+          <div class="arch-box arch-external">IKEA<br><small>Search fallback</small></div>
           <div class="arch-arrow">·</div>
-          <div class="arch-box arch-external">West Elm<small>Affiliate redirect</small></div>
+          <div class="arch-box arch-external">West Elm<br><small>Affiliate redirect</small></div>
           <div class="arch-arrow">·</div>
-          <div class="arch-box arch-external">Local Boutiques<small>Option C links</small></div>
+          <div class="arch-box arch-external">Local Boutiques<br><small>Option C · isLocal</small></div>
         </div>
       </div>
 
+      <div class="tech-badges">
+        <span class="tech-badge">Next.js 16 App Router</span>
+        <span class="tech-badge">TypeScript</span>
+        <span class="tech-badge">Tailwind v4</span>
+        <span class="tech-badge">Three.js (ssr:false)</span>
+        <span class="tech-badge">Cormorant Garamond</span>
+        <span class="tech-badge">sessionStorage</span>
+        <span class="tech-badge">No Framer Motion</span>
+        <span class="tech-badge">200-SKU catalog</span>
+        <span class="tech-badge">Vercel (target)</span>
+        <span class="tech-badge">Affiliate model</span>
+      </div>
     </div>
 
     <div class="prose reveal">
-      <p><strong>Stateless vs stateful.</strong> The recommendation engine is entirely stateless — given the same budget, style, and room inputs, it produces the same outputs every time. State lives in two places only: React's <code>useState</code> for the current session's budget totals and category selections, and <code>sessionStorage</code> for the five onboarding answers. Neither survives a tab close. This is an intentional MVP constraint: no database means no auth surface, no GDPR scope, and zero cold-start latency on the results page.</p>
-      <p><strong>Edge vs origin.</strong> All page renders are SSR at the Vercel origin on first load; subsequent navigation is client-side via React's router. The only edge function is <code>/api/click</code>, which is lightweight enough to run at the edge (no DB call, just a log + redirect). The 200-SKU catalog ships inside the JS bundle — it's ~40 KB gzipped, a deliberate trade-off at this scale (see Tradeoffs §3).</p>
-      <p><strong>Security boundary.</strong> The most important line in the diagram is the boundary around the browser. Affiliate partner IDs and any future API keys (retailer search APIs, analytics SDKs) must never cross into the client bundle. The <code>/api/click</code> handler owns the affiliate partner ID; the browser only ever calls <code>/api/click?sku=sofa-001</code> — a safe, non-secret parameter.</p>
+      <p><strong>Stateless vs stateful.</strong> The recommendation engine is fully stateless — the same <code>OnboardingData</code> object always produces the same <code>RecommendationSet[]</code>. The only stateful layer is the browser: React <code>useState</code> holds the current session's budget totals and category selections; <code>sessionStorage</code> holds the five onboarding answers under the versioned key <code>dwelliq_onboarding_v1</code>. Nothing persists server-side. This is intentional — no database means no auth surface, no GDPR scope, and zero latency on the results page.</p>
+      <p><strong>Edge vs origin.</strong> The homepage and all version pages (<code>/v2</code>–<code>/v5</code>) are statically generated at build time and served instantly from Vercel's CDN edge. The <code>/design</code> and <code>/recommendations</code> pages are client-side rendered — their output depends entirely on browser state, so SSR would add round-trip cost with no benefit. The only origin function is <code>/api/click</code>, which is thin enough to run at the edge.</p>
+      <p><strong>Security boundary.</strong> The most load-bearing line in the architecture is the boundary around the browser. The <code>CATALOG</code> in <code>catalog.ts</code> contains <code>affiliateUrl</code> placeholder values (<code>#affiliate-sofa-001</code>). Real affiliate partner tags live in Vercel environment variables and are only assembled server-side in the <code>/api/click</code> route handler. This prevents partner ID scraping, enables tag rotation without code deploys, and stops open-redirect attacks via SKU allowlist validation.</p>
     </div>
   </div>
 
-  <!-- ② Data Flow -->
+  <!-- SECTION 2: DATA FLOW -->
   <div class="doc-section" id="dataflow">
     <div class="section-label reveal">Section 02</div>
     <h2 class="section-title reveal">Data Flow</h2>
-    <p class="section-lead reveal">End-to-end from the first browser request to the user clicking "Buy" — 11 steps covering the happy path and the error path at each stage.</p>
+    <p class="section-lead reveal">Eleven steps from the first browser request to the affiliate redirect — using the actual file paths, function names, and data shapes from the codebase.</p>
 
-    <div class="callout-steps reveal">
+    <div class="flow-list reveal">
 
       <div class="flow-step">
-        <div class="flow-num">①</div>
+        <div class="flow-num">01</div>
         <div class="flow-content">
-          <strong>Initial page load <span class="callout-where where-edge">Edge CDN</span></strong>
-          <p>User navigates to <code>dwelliq.app</code>. Vercel serves the Next.js HTML shell from the CDN edge. The page is pre-rendered at build time (static generation) — no SSR work needed for the public homepage. Google Fonts and the JS bundle load in parallel.</p>
+          <strong>Static page load — Vercel CDN edge <span class="flow-where where-server">Edge</span></strong>
+          <p>User hits <code>dwelliq.app/</code>. Vercel serves the pre-rendered HTML shell from the CDN edge — built at deploy time via Next.js static generation. No SSR work. The Three.js hero canvas is skipped on the server entirely (<code>dynamic(..., {ssr: false})</code>). Google Fonts, the JS bundle, and Unsplash product images load in parallel. Target LCP: &lt;2s on a 4G connection.</p>
           <div class="flow-error">
-            <strong>Error path:</strong> CDN miss on first deploy → Vercel origin renders the page cold. First request in a new region may take ~300–500ms. Subsequent requests are cached at edge.
+            <strong>Error path</strong>
+            <p>CDN cold miss on first deploy to a new region → Vercel origin renders; ~300–500ms extra. Mitigated by ISR warm-up. Unsplash image 403 → <code>onError</code> handler in <code>RecommendationCard.tsx</code> renders a fallback emoji placeholder.</p>
           </div>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">②</div>
+        <div class="flow-num">02</div>
         <div class="flow-content">
-          <strong>JS bundle hydration <span class="callout-where where-client">Client</span></strong>
-          <p>React hydrates the static HTML. The catalog (<code>catalog.ts</code>) and recommendation engine (<code>recommendations.ts</code>) are imported as ES modules — both ship in the client bundle. No lazy-loading at this scale. Total bundle size target: &lt;150 KB gzipped including Three.js for the hero animation.</p>
+          <strong>JS hydration — catalog and engine load into memory <span class="flow-where where-client">Client</span></strong>
+          <p>React hydrates the static HTML. <code>catalog.ts</code> (200 SKUs) and <code>recommendations.ts</code> are imported as ES modules — both ship in the main JS bundle. No lazy-loading for these because every user who reaches <code>/recommendations</code> needs them. Three.js is lazy (<code>ssr:false</code>) and loads only if the hero section is in view. Target bundle: &lt;150 KB gzipped for the main chunk.</p>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">③</div>
+        <div class="flow-num">03</div>
         <div class="flow-content">
-          <strong>Onboarding: budget input <span class="callout-where where-client">Client</span></strong>
-          <p>User enters a room budget (e.g., $3,000). The component validates: must be a positive number, minimum $500 (below this, no meaningful 3-tier recommendation is possible). The value is stored in React state and persisted to <code>sessionStorage</code> under a namespaced key: <code>dwelliq_onboarding_v1</code>.</p>
-          <div class="flow-snippet">
-            <div class="code-block"><pre><span class="code-m">// Shape stored in sessionStorage</span>
+          <strong>User starts onboarding — /design <span class="flow-where where-client">Client</span></strong>
+          <p>User clicks "Design My Room". Next.js router navigates to <code>/design</code>, which renders <code>OnboardingFlow.tsx</code>. The component checks <code>sessionStorage</code> for an existing <code>dwelliq_onboarding_v1</code> key — if found, it restores progress so a page refresh doesn't lose their answers.</p>
+          <div class="flow-error">
+            <strong>Error path</strong>
+            <p>Safari private browsing disables sessionStorage — the <code>setItem</code> call throws a <code>SecurityError</code>. Without a try/catch wrapper this crashes the entire React tree. Fix: wrap all sessionStorage access in a try/catch with a module-level memory fallback variable.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-content">
+          <strong>Onboarding inputs collected and persisted <span class="flow-where where-client">Client</span></strong>
+          <p>The five-step wizard collects: <code>room</code>, <code>budget</code>, <code>style</code>, <code>household</code>, <code>postcode</code>. Each step appends to the <code>sessionStorage</code> object. Validation: budget must be ≥ $500 (below this, the A/B split becomes meaningless). Style must be one of the five <code>StylePreference</code> union literals from <code>types.ts</code>.</p>
+          <div class="code-block"><pre><span class="cm">// Shape written to sessionStorage at the end of /design</span>
 {
-  <span class="code-s">"budget"</span>: <span class="code-g">3000</span>,
-  <span class="code-s">"style"</span>: <span class="code-s">"warm-mid-century"</span>,
-  <span class="code-s">"roomType"</span>: <span class="code-s">"living-room"</span>,
-  <span class="code-s">"householdSize"</span>: <span class="code-s">"couple"</span>,
-  <span class="code-s">"hasPets"</span>: <span class="code-g">false</span>
+  <span class="cs">"room"</span>:         <span class="cs">"living-room"</span>,
+  <span class="cs">"budget"</span>:       <span class="cg">3000</span>,
+  <span class="cs">"style"</span>:        <span class="cs">"warm-mid-century"</span>,
+  <span class="cs">"household"</span>:    <span class="cs">"couple"</span>,
+  <span class="cs">"postcode"</span>:     <span class="cs">"10001"</span>,
+  <span class="cs">"primaryUse"</span>:   <span class="cs">"relaxing"</span>,
+  <span class="cs">"existingPieces"</span>: <span class="cs">"none"</span>,
+  <span class="cs">"dimensions"</span>:   { <span class="cs">"length"</span>: <span class="cg">14</span>, <span class="cs">"width"</span>: <span class="cg">11</span> }
 }</pre></div>
-          </div>
-          <div class="flow-error">
-            <strong>Error path:</strong> User enters non-numeric or negative value → inline validation message, step does not advance. sessionStorage write failure (private browsing on iOS with storage disabled) → fall back to React state only; user loses progress on tab close, but the session still works.
-          </div>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">④</div>
+        <div class="flow-num">05</div>
         <div class="flow-content">
-          <strong>Onboarding: style &amp; room questions <span class="callout-where where-client">Client</span></strong>
-          <p>Steps 2–5 collect style direction, room type, household size, and pet status. Each answer is appended to the <code>sessionStorage</code> object. No network requests are made during onboarding — it's a pure local state machine.</p>
+          <strong>Budget allocation — CATEGORY_BUDGET_ALLOCATION <span class="flow-where where-client">Client</span></strong>
+          <p>On "Get Recommendations", the engine applies the hardcoded allocation table to produce per-category budget caps. These ratios are based on interior design industry conventions and are the first parameter the scoring function uses.</p>
+          <div class="code-block"><pre><span class="cm">// CATEGORY_BUDGET_ALLOCATION (from catalog.ts) — applied to $3,000 budget</span>
+sofa:         <span class="cg">0.35</span>  → $<span class="cy">1,050</span>  cap
+area-rug:     <span class="cg">0.15</span>  → $<span class="cy">450</span>    cap
+coffee-table: <span class="cg">0.12</span>  → $<span class="cy">360</span>    cap
+accent-chair: <span class="cg">0.12</span>  → $<span class="cy">360</span>    cap
+floor-lamp:   <span class="cg">0.08</span>  → $<span class="cy">240</span>    cap
+<span class="cm">// side-table, wall-art, plant, curtains are in catalog but not MVP_CATEGORIES</span></pre></div>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">⑤</div>
+        <div class="flow-num">06</div>
         <div class="flow-content">
-          <strong>Budget allocation <span class="callout-where where-client">Client</span></strong>
-          <p>On "Get Recommendations", the budget optimizer runs synchronously in the browser. It applies hardcoded design-industry ratios: sofa 35%, case goods 20%, textiles 15%, lighting 10%, accent 10%, rugs 10%. These ratios produce per-category budget caps used in the next step.</p>
-          <div class="flow-snippet">
-            <div class="code-block"><pre><span class="code-m">// Budget allocation output for $3,000</span>
-{
-  <span class="code-s">"sofa"</span>:      { <span class="code-s">"cap"</span>: <span class="code-g">1050</span>, <span class="code-s">"flex"</span>: <span class="code-g">1260</span> },
-  <span class="code-s">"caseGoods"</span>: { <span class="code-s">"cap"</span>: <span class="code-g">600</span>,  <span class="code-s">"flex"</span>: <span class="code-g">720</span>  },
-  <span class="code-s">"textiles"</span>:  { <span class="code-s">"cap"</span>: <span class="code-g">450</span>,  <span class="code-s">"flex"</span>: <span class="code-g">540</span>  },
-  <span class="code-s">"lighting"</span>:  { <span class="code-s">"cap"</span>: <span class="code-g">300</span>,  <span class="code-s">"flex"</span>: <span class="code-g">360</span>  },
-  <span class="code-s">"accent"</span>:    { <span class="code-s">"cap"</span>: <span class="code-g">300</span>,  <span class="code-s">"flex"</span>: <span class="code-g">360</span>  },
-  <span class="code-s">"rugs"</span>:      { <span class="code-s">"cap"</span>: <span class="code-g">300</span>,  <span class="code-s">"flex"</span>: <span class="code-g">360</span>  }
+          <strong>Recommendation engine: filter + scoreProduct() <span class="flow-where where-client">Client</span></strong>
+          <p>For each of the five MVP categories (<code>sofa, coffee-table, area-rug, floor-lamp, accent-chair</code>), the engine filters the catalog and scores every matching product. The scoring function: style match +3, household suitability +2, product rating (0–5), and a budget-fit score for Option A (penalises products far from 85% of the category cap). Execution: &lt;5ms synchronously in the browser.</p>
+          <div class="code-block"><pre><span class="ck">function</span> <span class="co">scoreProduct</span>(p, data, targetBudget, mode) {
+  <span class="ck">let</span> score = <span class="cg">0</span>
+  <span class="ck">if</span> (p.styles.<span class="co">includes</span>(data.style))           score += <span class="cg">3</span>  <span class="cm">// style match</span>
+  <span class="ck">if</span> (p.householdSuitability.<span class="co">includes</span>(data.household)) score += <span class="cg">2</span>  <span class="cm">// household fit</span>
+  score += p.rating                                            <span class="cm">// 0–5</span>
+  <span class="ck">if</span> (mode === <span class="cs">'A'</span>) {
+    <span class="ck">const</span> fit = <span class="cg">1</span> - Math.<span class="co">abs</span>(p.price - targetBudget * <span class="cg">0.85</span>) / targetBudget
+    score += fit * <span class="cg">2</span>                                          <span class="cm">// budget proximity</span>
+  }
+  <span class="ck">return</span> score
 }</pre></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-step">
-        <div class="flow-num">⑥</div>
-        <div class="flow-content">
-          <strong>Recommendation engine: filter + rank <span class="callout-where where-client">Client</span></strong>
-          <p>For each category, <code>recommendations.ts</code> filters the catalog to products matching the chosen style tags and household suitability. It then ranks by price against the cap to select: Option A (highest-rated product ≤ cap), Option B (highest-rated product in cap×1.3), Option C (first product with <code>retailer === "Local Boutique"</code> or nearest price to cap). The engine runs synchronously — no async, no network. Typical execution time: &lt;5ms.</p>
           <div class="flow-error">
-            <strong>Error path:</strong> No products match a style/category combination → engine falls back to removing the style filter and returning the top 3 by rating. This guarantees the results page always has content but means the style match may be loose — logged as a console warning in development.
+            <strong>Error path</strong>
+            <p>No products pass the style/category filter (rare sparse combinations) → engine removes the style filter and returns top-3 by rating. This guarantees the results page always renders. The loose match is logged as a <code>console.warn</code> in development for catalog gap tracking.</p>
           </div>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">⑦</div>
+        <div class="flow-num">07</div>
         <div class="flow-content">
-          <strong>Results page render <span class="callout-where where-client">Client</span></strong>
-          <p>Results are rendered as a client-side navigation (no SSR — the output depends entirely on client-side state). The A/B/C grid is built from the engine output. The budget tracker in the header initializes to the sum of all Option A prices. Swapping to B or C updates the tracker in real time via React state.</p>
+          <strong>Option A / B / C selection logic <span class="flow-where where-client">Client</span></strong>
+          <p>Three tiers are selected per category with distinct pool filters before scoring is applied.</p>
+          <div class="code-block"><pre><span class="cm">// Option A — within budget (≤ categoryBudget × 0.92, non-local)</span>
+optionAPool = products.<span class="co">filter</span>(p => !p.isLocal && p.price <= cap * <span class="cg">0.92</span>)
+
+<span class="cm">// Option B — stretch (between cap and cap × 1.4, non-local, premium tier preferred)</span>
+optionBPool = products.<span class="co">filter</span>(p => !p.isLocal
+  && p.price > cap && p.price <= cap * <span class="cg">1.4</span>)
+
+<span class="cm">// Option C — local first (isLocal sorted by localDistance), fallback to top-rated global</span>
+optionCPool = products.<span class="co">filter</span>(p => p.isLocal)
+  .<span class="co">sort</span>((a, b) => (a.localDistance ?? <span class="cg">99</span>) - (b.localDistance ?? <span class="cg">99</span>))</pre></div>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">⑧</div>
+        <div class="flow-num">08</div>
         <div class="flow-content">
-          <strong>User swaps item options <span class="callout-where where-client">Client</span></strong>
-          <p>User selects Option B for the sofa. React updates <code>selectedOptions</code> state: <code>{ sofa: 'B', rug: 'A', ... }</code>. The budget tracker recalculates synchronously. No server call. If the new total exceeds the original budget, the tracker renders a red warning — but the selection is not blocked (user can be flexible).</p>
+          <strong>Results page renders — /recommendations <span class="flow-where where-client">Client</span></strong>
+          <p>The router navigates to <code>/recommendations</code>, which reads <code>OnboardingData</code> from <code>sessionStorage</code> and calls <code>generateRecommendations()</code> inline. The A/B/C grid renders using <code>RecommendationCard.tsx</code>. The budget tracker in the header initialises to the sum of all Option A prices and updates in real time as the user swaps selections via React state.</p>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">⑨</div>
+        <div class="flow-num">09</div>
         <div class="flow-content">
-          <strong>Affiliate click-out <span class="callout-where where-client">Client</span> → <span class="callout-where where-edge">Server</span></strong>
-          <p>User clicks "Buy at Wayfair" on a sofa card. The link calls <code>/api/click?sku=sofa-002&amp;option=B</code> — an internal Next.js Route Handler. It does not expose the affiliate partner ID to the browser.</p>
-          <div class="flow-snippet">
-            <div class="code-block"><pre><span class="code-m">// /api/click handler (server-side, runs at Vercel edge)</span>
-<span class="code-c">export async function</span> <span class="code-o">GET</span>(req: Request) {
-  <span class="code-c">const</span> { sku, option } = <span class="code-o">parseParams</span>(req.url)
-  <span class="code-c">const</span> product = <span class="code-o">lookupSku</span>(sku)          <span class="code-m">// in-memory catalog ref</span>
-  <span class="code-o">logClick</span>({ sku, option, ts: Date.now() }) <span class="code-m">// append to log / analytics</span>
-  <span class="code-c">const</span> affiliateUrl = <span class="code-o">buildAffiliateUrl</span>(
-    product.baseUrl,
-    process.env.<span class="code-g">AFFILIATE_TAG</span>          <span class="code-m">// secret — never in browser</span>
-  )
-  <span class="code-c">return</span> Response.<span class="code-o">redirect</span>(affiliateUrl, <span class="code-g">302</span>)
-}</pre></div>
-          </div>
+          <strong>User swaps options — live budget recalculation <span class="flow-where where-client">Client</span></strong>
+          <p>Selecting Option B for the sofa updates <code>selectedOptions</code> state: <code>{ sofa: 'B', 'area-rug': 'A', ... }</code>. The budget tracker recalculates synchronously. If the new total exceeds the original budget the tracker renders a warning in <code>rust</code> colour — but the selection is not blocked, because flexibility is a legitimate user intent (Option B exists for this reason).</p>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num">10</div>
+        <div class="flow-content">
+          <strong>Buy click → /api/click route handler <span class="flow-where where-client">Client</span> → <span class="flow-where where-server">Server</span></strong>
+          <p>User clicks "View at Amazon →". <code>RecommendationCard.tsx</code> calls <code>window.open('/api/click?sku=sofa-001&amp;option=B', '_blank')</code>. The Next.js Route Handler validates the SKU against the CATALOG allowlist, logs the click, builds the affiliate URL from <code>process.env.AFFILIATE_TAG_AMAZON</code>, and issues a 302 redirect. The affiliate partner tag never appears in the browser.</p>
+          <div class="code-block"><pre><span class="cm">// src/app/api/click/route.ts (Route Handler — runs server-side)</span>
+<span class="ck">export async function</span> <span class="co">GET</span>(request: Request) {
+  <span class="ck">const</span> sku    = searchParams.<span class="co">get</span>(<span class="cs">'sku'</span>)
+  <span class="ck">const</span> option = searchParams.<span class="co">get</span>(<span class="cs">'option'</span>) ?? <span class="cs">'A'</span>
+  <span class="ck">const</span> product = CATALOG.<span class="co">find</span>(p => p.id === sku)  <span class="cm">// allowlist lookup</span>
+  <span class="ck">if</span> (!product) <span class="ck">return</span> <span class="ck">new</span> Response(<span class="cs">'Unknown SKU'</span>, { status: <span class="cg">400</span> })
+  console.<span class="co">log</span>(`[click] sku=${sku} option=${option} ts=${Date.<span class="co">now</span>()}`)
+  <span class="ck">return</span> Response.<span class="co">redirect</span>(<span class="co">buildRetailerUrl</span>(product), <span class="cg">302</span>)
+}
+
+<span class="cm">// buildRetailerUrl — partner ID in env var, never in client bundle</span>
+<span class="ck">const</span> tag = process.env.<span class="cg">AFFILIATE_TAG_AMAZON</span>
+<span class="ck">return</span> `https://amazon.com/s?k=${q}&tag=${tag}`</pre></div>
           <div class="flow-error">
-            <strong>Error path:</strong> Unknown SKU → 400 Bad Request, no redirect. Missing <code>AFFILIATE_TAG</code> env var → 500, log error, no redirect (better to fail closed than to redirect without tracking). Retailer site down → user sees retailer's error page; no retry from Dwelliq's side.
+            <strong>Error path</strong>
+            <p>Unknown SKU → 400, no redirect (prevents open-redirect attack). Missing <code>AFFILIATE_TAG_*</code> env var → redirect fires without the tag (revenue lost but UX intact — better than failing closed for the user). Retailer site down → user lands on retailer's error page; Dwelliq has no retry.</p>
           </div>
         </div>
       </div>
 
       <div class="flow-step">
-        <div class="flow-num">⑩</div>
+        <div class="flow-num">11</div>
         <div class="flow-content">
-          <strong>Retailer redirect <span class="callout-where where-external">External</span></strong>
-          <p>Browser follows the 302 to the retailer's product page with Dwelliq's affiliate tag appended. The retailer's cookie sets the attribution window (typically 24h for Amazon, 7 days for others). Dwelliq earns a commission only if the user completes a purchase within that window.</p>
-        </div>
-      </div>
-
-      <div class="flow-step">
-        <div class="flow-num">⑪</div>
-        <div class="flow-content">
-          <strong>Session persistence across navigation <span class="callout-where where-client">Client</span></strong>
-          <p>If the user navigates back from the retailer and re-opens Dwelliq in the same tab, <code>sessionStorage</code> still holds the onboarding context and the selected options are restored from React state (since the tab never closed). Closing the tab ends the session — by design. A future "save my list" feature would require auth and a database write at this step.</p>
+          <strong>Retailer redirect and attribution <span class="flow-where where-external">External</span></strong>
+          <p>Browser follows the 302 to the retailer product page with Dwelliq's affiliate tag appended. The retailer sets an attribution cookie (Amazon: 24-hour window; others vary). If the user completes a purchase within the window, the affiliate commission is credited. The session in Dwelliq remains intact if the user navigates back — <code>sessionStorage</code> still holds their context and their saved items persist in React state for the tab's lifetime.</p>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- ③ Design Tradeoffs -->
+  <!-- SECTION 3: TRADEOFFS -->
   <div class="doc-section" id="tradeoffs">
     <div class="section-label reveal">Section 03</div>
     <h2 class="section-title reveal">Design Tradeoffs</h2>
-    <p class="section-lead reveal">Six decisions where the alternative was genuinely tempting — and why the chosen path fits Dwelliq's current stage better.</p>
+    <p class="section-lead reveal">Six decisions made during the Dwelliq build where the alternative was genuinely competitive — and why the chosen path fits an affiliate-first MVP with zero backend.</p>
 
     <div class="reveal">
 
       <div class="tradeoff-card">
-        <h3 class="tradeoff-title">① Client-side recommendation engine vs server-side API</h3>
+        <h3 class="tradeoff-title">① Client-side recommendation engine vs server API</h3>
         <div class="tradeoff-grid">
           <div class="tradeoff-col tradeoff-chosen">
-            <h5>&#10003; Chosen — Client-side (catalog.ts + recommendations.ts in bundle)</h5>
-            <p>The full 200-SKU catalog and all filtering logic ships in the browser. Recommendations run in &lt;5ms with zero network latency. No API to secure, no cold starts, no rate limits, no cost per recommendation call.</p>
+            <h5>✓ Chosen — catalog.ts + recommendations.ts in bundle</h5>
+            <p>Both files ship to the browser. <code>generateRecommendations()</code> runs in &lt;5ms with zero network latency. No API to rate-limit, secure, or cold-start. Recommendations are deterministic — same inputs always produce the same A/B/C set, which makes the product easier to test and debug.</p>
           </div>
           <div class="tradeoff-col tradeoff-rejected">
-            <h5>&#215; Rejected — Server API with database catalog</h5>
-            <p>A <code>/api/recommend</code> endpoint backed by Postgres or a vector DB would enable personalization, A/B testing of recommendations, and a catalog too large for the bundle. Adds 100–300ms latency and significant infrastructure complexity for an MVP.</p>
+            <h5>✗ Rejected — server-side /api/recommend endpoint</h5>
+            <p>Would unlock personalization, real-time pricing, and a catalog too large for the bundle. Adds 80–250ms round-trip latency, introduces an API surface to secure, and requires a database or vector store for anything beyond simple filtering.</p>
           </div>
         </div>
-        <div class="tradeoff-impact"><strong>Impact:</strong> Bundle is ~40 KB larger (catalog payload). Acceptable at this scale. Hard limit: if the catalog grows past ~2,000 SKUs, the bundle approach breaks down and a server API becomes necessary. Design for that migration now by keeping the catalog import behind a single module boundary.</div>
+        <div class="tradeoff-impact"><strong>Scale trigger:</strong> When the catalog grows past ~2,000 SKUs, the bundle approach breaks. Design for that migration now by keeping all catalog imports behind the single <code>src/lib/catalog.ts</code> module boundary — the server API can slot in without touching any UI components.</div>
       </div>
 
       <div class="tradeoff-card">
-        <h3 class="tradeoff-title">② sessionStorage vs user accounts for state persistence</h3>
+        <h3 class="tradeoff-title">② No Framer Motion — pure CSS animations throughout</h3>
         <div class="tradeoff-grid">
           <div class="tradeoff-col tradeoff-chosen">
-            <h5>&#10003; Chosen — sessionStorage (ephemeral, zero-friction)</h5>
-            <p>No sign-up, no email capture, no GDPR consent flow. Users get the full product in &lt;2 minutes. Affiliate revenue can be earned from completely anonymous sessions. Privacy by design: Dwelliq stores nothing about users server-side.</p>
+            <h5>✓ Chosen — CSS keyframes + Tailwind transition utilities</h5>
+            <p>All animations (hero particle fade, card hover lift, skeleton shimmer, btn-gold glow) are CSS-only. Zero JS animation overhead. No Framer Motion bundle (~30 KB gzipped). Animations don't block the React render cycle. The shimmer skeleton uses a single <code>@keyframes shimmer</code> block in <code>globals.css</code>.</p>
           </div>
           <div class="tradeoff-col tradeoff-rejected">
-            <h5>&#215; Rejected — Auth + saved lists (Supabase / Clerk)</h5>
-            <p>Saves recommendation lists across devices, enables email follow-up, unlocks retention data. But adds a sign-up barrier that will kill conversion for the majority of casual users at the MVP stage.</p>
+            <h5>✗ Rejected — Framer Motion</h5>
+            <p>Would enable spring physics, shared layout transitions, and gesture-driven animations (drag-to-sort, swipe cards). These are compelling for a furniture picker — swipe left/right on options is a natural mobile pattern — but add complexity and bundle size that aren't justified at the MVP stage.</p>
           </div>
         </div>
-        <div class="tradeoff-impact"><strong>Impact:</strong> Users lose their list when they close the tab. Retention is zero by design. This is acceptable for v1 because the funnel ends at an affiliate click-out — re-engagement is the retailer's problem, not Dwelliq's. Add auth at v2 when retention data shows users actively want to return.</div>
+        <div class="tradeoff-impact"><strong>UX impact:</strong> The absence of spring animations is barely perceptible on desktop. On mobile, swipe gestures on the A/B/C cards would be a genuine UX win — worth revisiting at v2 with Framer Motion's <code>useMotionValue</code> and <code>useTransform</code> rather than the full library.</div>
       </div>
 
       <div class="tradeoff-card">
-        <h3 class="tradeoff-title">③ Static in-bundle catalog vs live product API</h3>
+        <h3 class="tradeoff-title">③ sessionStorage vs user accounts for state persistence</h3>
         <div class="tradeoff-grid">
           <div class="tradeoff-col tradeoff-chosen">
-            <h5>&#10003; Chosen — 200 curated SKUs in catalog.ts</h5>
-            <p>Every product is manually curated for quality, style accuracy, and availability. Prices are approximate (updated on deploy). No scraping, no API costs, no risk of showing out-of-stock items in real time.</p>
+            <h5>✓ Chosen — sessionStorage (ephemeral, zero-friction)</h5>
+            <p>No sign-up flow. No email capture. No cookie consent for PII. Users get the full product experience in under 2 minutes. The versioned key (<code>dwelliq_onboarding_v1</code>) means schema changes don't corrupt existing sessions — just bump to <code>v2</code>.</p>
           </div>
           <div class="tradeoff-col tradeoff-rejected">
-            <h5>&#215; Rejected — Live retailer product APIs (Wayfair DSv2, Amazon PA-API)</h5>
-            <p>Real prices, live stock status, larger catalog. But Amazon PA-API requires a qualifying affiliate account ($10/day in commissions), has strict TOS about caching, and adds complexity around API key management and rate limiting from the browser.</p>
+            <h5>✗ Rejected — Auth + saved lists (Clerk + Supabase)</h5>
+            <p>Saves recommendation lists across devices, enables follow-up email ("your sofa is back in stock"), unlocks cohort analytics. But adds 2–3 weeks of implementation and a sign-up friction that kills conversion for the majority of casual visitors at this stage.</p>
           </div>
         </div>
-        <div class="tradeoff-impact"><strong>Impact:</strong> Prices may be stale by deploy cycle. Mitigate by adding a "prices may vary" disclaimer on product cards and linking directly to the retailer page where the canonical price lives. Plan to move to live API when affiliate account qualifies.</div>
+        <div class="tradeoff-impact"><strong>Revenue impact:</strong> Users who close the tab lose their curated list. For an affiliate product this is an acceptable loss at MVP — the funnel ends at the retailer click-out, not a return visit. Add auth at v2 when retention data shows users want to come back.</div>
       </div>
 
       <div class="tradeoff-card">
-        <h3 class="tradeoff-title">④ First-party /api/click redirect vs direct affiliate links</h3>
+        <h3 class="tradeoff-title">④ First-party /api/click redirect vs direct affiliate href</h3>
         <div class="tradeoff-grid">
           <div class="tradeoff-col tradeoff-chosen">
-            <h5>&#10003; Chosen — /api/click server-side redirect</h5>
-            <p>Affiliate partner IDs live in server environment variables. Click events are logged server-side (sku, option, timestamp). The client never sees the partner ID, preventing URL scraping and protecting revenue integrity.</p>
+            <h5>✓ Chosen — /api/click Route Handler with env var tags</h5>
+            <p>Affiliate partner IDs live in <code>process.env.AFFILIATE_TAG_*</code>. The browser only sees the SKU. Click events are logged server-side with <code>sku</code>, <code>option</code>, and <code>timestamp</code>. Partner ID rotation is one env change + redeploy — no catalog update required.</p>
           </div>
           <div class="tradeoff-col tradeoff-rejected">
-            <h5>&#215; Rejected — Direct affiliate URLs in the client bundle</h5>
-            <p>Simpler to implement — just render the full affiliate URL as an <code>&lt;a href&gt;</code>. But the affiliate partner tag is exposed in the HTML source, where scrapers or competitors can harvest it. Worse, if the partner ID is rotated, every deployed HTML file is stale.</p>
+            <h5>✗ Rejected — Direct affiliate URLs in client bundle / catalog</h5>
+            <p>Simpler — just render <code>&lt;a href={product.affiliateUrl}&gt;</code>. But the partner tag is in the HTML source. Anyone can copy it and use it in their own links, stealing attribution. If the tag is rotated, every deployed page is stale until users hard-refresh.</p>
           </div>
         </div>
-        <div class="tradeoff-impact"><strong>Security impact:</strong> The /api/click pattern is the correct production pattern for any affiliate product. Partner ID rotation requires one env var change and a redeploy — not a catalog update. The mild cost: one extra HTTP request per click (fast, but adds ~50ms if the edge function cold-starts).</div>
+        <div class="tradeoff-impact"><strong>Security note:</strong> An open-redirect is also prevented: the handler validates the <code>sku</code> parameter against the CATALOG allowlist before constructing the redirect URL. An attacker cannot pass an arbitrary URL through <code>/api/click</code>.</div>
       </div>
 
       <div class="tradeoff-card">
         <h3 class="tradeoff-title">⑤ Tailwind v4 CSS-first config vs Tailwind v3 JS config</h3>
         <div class="tradeoff-grid">
           <div class="tradeoff-col tradeoff-chosen">
-            <h5>&#10003; Chosen — Tailwind v4 with @theme inline in globals.css</h5>
-            <p>Design tokens live in CSS, not a JS config file. The theme is co-located with the global styles, making it easier for designers working in CSS to adjust tokens without touching JS config. Faster HMR on token changes.</p>
+            <h5>✓ Chosen — Tailwind v4 with @theme inline in globals.css</h5>
+            <p>All design tokens (<code>--cream</code>, <code>--gold</code>, <code>--ink</code>, etc.) live in the CSS <code>@theme inline</code> block alongside the global styles. No separate <code>tailwind.config.js</code> file. Faster HMR on token changes. Tokens are usable in both Tailwind utilities and raw <code>var()</code> CSS references.</p>
           </div>
           <div class="tradeoff-col tradeoff-rejected">
-            <h5>&#215; Rejected — Tailwind v3 with tailwind.config.js</h5>
-            <p>More ecosystem documentation, wider tooling support, stable IntelliSense across all editors. v4 is still relatively new and some third-party Tailwind plugins have not migrated to the v4 plugin API.</p>
+            <h5>✗ Rejected — Tailwind v3 with tailwind.config.js</h5>
+            <p>Wider ecosystem documentation and tooling support. Some third-party Tailwind plugins haven't migrated to the v4 plugin API, which could block useful additions (typography plugin, forms plugin). More familiar to engineers joining the project from other Next.js codebases.</p>
           </div>
         </div>
-        <div class="tradeoff-impact"><strong>Complexity note:</strong> v4 is a breaking change from v3 — the config format, plugin API, and some utility names differ. Anyone joining the project who knows v3 deeply will have a learning curve. Document the config format explicitly in CLAUDE.md or README.</div>
+        <div class="tradeoff-impact"><strong>Onboarding risk:</strong> Engineers who know Tailwind v3 deeply will have a learning curve. The config format, some utility names, and the plugin API all changed. Document the v4 differences explicitly in <code>AGENTS.md</code> — it already warns about this pattern.</div>
       </div>
 
       <div class="tradeoff-card">
-        <h3 class="tradeoff-title">⑥ Next.js App Router vs Pages Router</h3>
+        <h3 class="tradeoff-title">⑥ Three.js dynamic import (ssr:false) vs CSS gradient hero</h3>
         <div class="tradeoff-grid">
           <div class="tradeoff-col tradeoff-chosen">
-            <h5>&#10003; Chosen — App Router (Next.js 13+)</h5>
-            <p>Route handlers (<code>/api/click</code>) and server components live in the same <code>app/</code> directory. React Server Components allow the page shell to render without shipping the catalog to the server-render pass. Layouts are co-located with routes.</p>
+            <h5>✓ Chosen — Three.js with next/dynamic ssr:false</h5>
+            <p>The hero particle animation runs as a WebGL canvas, deferred entirely to the client. <code>dynamic(() => import('./HeroCanvas'), { ssr: false })</code> means Three.js never runs on the Node.js server — avoiding the <code>window is not defined</code> crash — and doesn't block the initial HTML render.</p>
           </div>
           <div class="tradeoff-col tradeoff-rejected">
-            <h5>&#215; Rejected — Pages Router</h5>
-            <p>More stable, wider community reference material, simpler mental model for teams new to Next.js. App Router is still the more complex mental model — especially the "use client" / "use server" boundary, which is non-obvious and a common source of bugs.</p>
+            <h5>✗ Rejected — Pure CSS gradient background</h5>
+            <p>Zero JS cost, no SSR risk, works in every browser. The other landing page versions (v3–v5) demonstrate that CSS-only animated backgrounds can be equally striking. But Three.js is part of the product's technical identity and serves as a portfolio differentiator.</p>
           </div>
         </div>
-        <div class="tradeoff-impact"><strong>Pitfall:</strong> The catalog and recommendation engine are imported in client components (<code>"use client"</code>). Any file that imports from them transitively becomes a client component. Keep <code>catalog.ts</code> and <code>recommendations.ts</code> free of server-only imports (e.g., <code>fs</code>, <code>process.env</code>) so they can safely run on both sides.</div>
+        <div class="tradeoff-impact"><strong>Performance note:</strong> Three.js adds ~300 KB gzipped. It must stay behind <code>ssr:false</code> and behind a <code>loading</code> placeholder. If Core Web Vitals become a priority, consider switching to a lightweight CSS particle alternative for the v1 landing page and reserving Three.js for the interactive version pages.</div>
       </div>
 
     </div>
   </div>
 
-  <!-- ④ Technical Insights -->
+  <!-- SECTION 4: TECHNICAL INSIGHTS -->
   <div class="doc-section" id="insights">
     <div class="section-label reveal">Section 04</div>
     <h2 class="section-title reveal">Technical Insights</h2>
-    <p class="section-lead reveal">Five non-obvious implementation details where the "obvious" approach would introduce real bugs, security gaps, or poor UX — and what the correct pattern looks like.</p>
+    <p class="section-lead reveal">Five non-obvious details from the Dwelliq codebase — where the "obvious" implementation would create real bugs, security gaps, or UX problems.</p>
 
     <div class="reveal">
 
       <div class="insight-card">
         <span class="insight-tag tag-security">Security</span>
-        <h3 class="insight-title">Affiliate partner IDs must never reach the browser</h3>
-        <p class="insight-body">The obvious implementation — embedding the full affiliate URL in the product card's <code>href</code> — exposes your partner tag in the page source. Any user can open DevTools, copy the tag, and use it in their own links, stealing your commission attribution. Worse, if you ever rotate the partner ID, every client-rendered page with the old URL is broken until users reload.</p>
-        <p class="insight-body"><strong>Correct pattern:</strong> The client renders <code>/api/click?sku=sofa-002&amp;option=B</code>. The route handler owns the affiliate URL construction using an environment variable. Partner ID rotation is one env change + redeploy, with zero impact on any client-side code.</p>
-        <div class="code-block"><pre><span class="code-m">// ❌ Wrong — affiliate tag in client bundle</span>
-&lt;a href="https://amazon.com/dp/B09XYZ?tag=<span class="code-r">dwelliq-20</span>"&gt;Buy&lt;/a&gt;
+        <h3 class="insight-title">Affiliate partner IDs must never reach the browser — and the SKU must be an allowlist lookup</h3>
+        <p class="insight-body">Two separate vulnerabilities live in the "simple" approach of rendering <code>&lt;a href={product.affiliateUrl}&gt;</code> directly. First, the partner tag (<code>?tag=dwelliq-20</code>) is exposed in the HTML source and can be harvested by scrapers. Second, if you naively use the <code>sku</code> query param to build the redirect URL without validation, an attacker can craft <code>/api/click?sku=https://evil.com</code> and use Dwelliq's server as an open redirector for phishing.</p>
+        <p class="insight-body"><strong>Correct pattern (already implemented):</strong> The handler looks up the SKU in the CATALOG allowlist. If not found → 400. The redirect URL is built exclusively from <code>product.baseUrl</code> (known safe) plus the env var partner tag.</p>
+        <div class="code-block"><pre><span class="cm">// ❌ Wrong — partner tag in source, no allowlist</span>
+&lt;a href=<span class="cs">"https://amazon.com/dp/B09XYZ?tag=dwelliq-20"</span>&gt;Buy&lt;/a&gt;
 
-<span class="code-m">// ✓ Correct — only the SKU travels to the browser</span>
-&lt;a href="/api/click?sku=sofa-002&amp;option=B"&gt;Buy&lt;/a&gt;
+<span class="cm">// ✓ Correct — only SKU in browser URL</span>
+&lt;a onClick={() =&gt; window.<span class="co">open</span>(<span class="cs">`/api/click?sku=${product.id}&amp;option=${option}`</span>)}&gt;Buy&lt;/a&gt;
 
-<span class="code-m">// Server-side (env var — never in bundle)</span>
-<span class="code-c">const</span> tag = process.env.<span class="code-g">AFFILIATE_TAG</span> <span class="code-m">// "dwelliq-20"</span></pre></div>
+<span class="cm">// Server: allowlist validation before any redirect</span>
+<span class="ck">const</span> product = CATALOG.<span class="co">find</span>(p =&gt; p.id === sku)
+<span class="ck">if</span> (!product) <span class="ck">return</span> <span class="ck">new</span> Response(<span class="cs">'Unknown SKU'</span>, { status: <span class="cg">400</span> })</pre></div>
       </div>
 
       <div class="insight-card">
         <span class="insight-tag tag-rendering">Browser Rendering</span>
-        <h3 class="insight-title">Three.js canvas must be dynamically imported to avoid SSR crashes</h3>
-        <p class="insight-body">Next.js App Router server-renders pages on Node.js, which has no <code>window</code>, <code>document</code>, or <code>WebGLRenderingContext</code>. Importing Three.js at the module level causes an immediate crash during server rendering because Three.js accesses <code>window</code> at import time in some internal paths.</p>
-        <p class="insight-body"><strong>Correct pattern:</strong> Use Next.js <code>dynamic()</code> with <code>ssr: false</code> to defer the Three.js import to the client. This also avoids adding Three.js to the SSR bundle (a meaningful size saving on the server render pass).</p>
-        <div class="code-block"><pre><span class="code-m">// ❌ Wrong — Three.js at module level crashes SSR</span>
-<span class="code-c">import</span> { HeroCanvas } from <span class="code-s">'./HeroCanvas'</span>
+        <h3 class="insight-title">Three.js must be dynamically imported — importing it at module level crashes the Node.js SSR pass</h3>
+        <p class="insight-body">Next.js App Router server-renders pages on Node.js, which has no <code>window</code>, <code>document</code>, or <code>WebGLRenderingContext</code>. Three.js accesses <code>window</code> in some internal paths at import time. Importing it at the module level — even inside a component file marked <code>"use client"</code> — causes the server render to throw <code>ReferenceError: window is not defined</code> and the build fails.</p>
+        <p class="insight-body"><strong>Correct pattern (already implemented):</strong> <code>next/dynamic</code> with <code>ssr: false</code> defers the Three.js import to the browser. The <code>loading</code> prop provides an immediate CSS placeholder so there's no layout shift.</p>
+        <div class="code-block"><pre><span class="cm">// ❌ Wrong — crashes SSR even inside "use client" files</span>
+<span class="ck">import</span> * <span class="ck">as</span> THREE <span class="ck">from</span> <span class="cs">'three'</span>
 
-<span class="code-m">// ✓ Correct — deferred to client only</span>
-<span class="code-c">import</span> dynamic from <span class="code-s">'next/dynamic'</span>
-<span class="code-c">const</span> HeroCanvas = <span class="code-o">dynamic</span>(
-  () => <span class="code-c">import</span>(<span class="code-s">'./HeroCanvas'</span>),
-  { ssr: <span class="code-g">false</span>, loading: () => &lt;div className="hero-placeholder" /&gt; }
+<span class="cm">// ✓ Correct — deferred to client, SSR receives the loading placeholder</span>
+<span class="ck">const</span> HeroCanvas = <span class="co">dynamic</span>(
+  () =&gt; <span class="ck">import</span>(<span class="cs">'./HeroCanvas'</span>),
+  {
+    ssr: <span class="cg">false</span>,
+    loading: () =&gt; &lt;div className=<span class="cs">"h-screen bg-ink"</span> /&gt;
+  }
 )</pre></div>
       </div>
 
       <div class="insight-card">
         <span class="insight-tag tag-data">Data Modeling</span>
-        <h3 class="insight-title">sessionStorage is synchronous and can throw — always wrap it</h3>
-        <p class="insight-body">In Safari's private browsing mode (and in some enterprise browser policies), <code>sessionStorage</code> is either disabled or throws a <code>SecurityError</code> on access. The obvious pattern — reading or writing <code>sessionStorage</code> directly in a component — throws an uncaught exception that crashes the entire React tree.</p>
-        <p class="insight-body"><strong>Correct pattern:</strong> Wrap all sessionStorage access in a try/catch utility. On failure, fall back to a module-level variable that survives re-renders but not tab closes — functionally equivalent for the session, with zero crash risk.</p>
-        <div class="code-block"><pre><span class="code-m">// ❌ Wrong — throws in private browsing</span>
-sessionStorage.<span class="code-o">setItem</span>(<span class="code-s">'dwelliq_onboarding_v1'</span>, JSON.<span class="code-o">stringify</span>(data))
+        <h3 class="insight-title">sessionStorage access must be wrapped in try/catch — it throws in Safari private browsing and some enterprise policies</h3>
+        <p class="insight-body">In Safari's private browsing mode and in some enterprise browser policies (common in corp laptops), <code>sessionStorage.setItem()</code> throws a <code>SecurityError</code> synchronously. An uncaught exception inside a React event handler or a <code>useEffect</code> propagates up and crashes the React tree — the user sees a blank white screen with no error message.</p>
+        <p class="insight-body"><strong>Correct pattern:</strong> Wrap every read and write in try/catch. On write failure, fall back to a module-level variable. On read failure, treat the session as fresh. This is functionally equivalent for the session duration — the only thing lost is recovery after a page refresh, which is unlikely in private browsing anyway.</p>
+        <div class="code-block"><pre><span class="cm">// ❌ Wrong — throws SecurityError in private browsing</span>
+sessionStorage.<span class="co">setItem</span>(<span class="cs">'dwelliq_onboarding_v1'</span>, JSON.<span class="co">stringify</span>(data))
 
-<span class="code-m">// ✓ Correct — graceful fallback</span>
-<span class="code-c">let</span> memoryFallback: OnboardingContext | <span class="code-g">null</span> = <span class="code-g">null</span>
+<span class="cm">// ✓ Correct — graceful fallback to module-level variable</span>
+<span class="ck">let</span> memFallback: OnboardingData | <span class="ck">null</span> = <span class="ck">null</span>
 
-<span class="code-c">function</span> <span class="code-o">saveOnboarding</span>(data: OnboardingContext) {
-  <span class="code-c">try</span> {
-    sessionStorage.<span class="code-o">setItem</span>(<span class="code-s">'dwelliq_onboarding_v1'</span>, JSON.<span class="code-o">stringify</span>(data))
-  } <span class="code-c">catch</span> {
-    memoryFallback = data <span class="code-m">// silent fallback — works for session duration</span>
+<span class="ck">export function</span> <span class="co">saveOnboarding</span>(data: OnboardingData) {
+  <span class="ck">try</span> {
+    sessionStorage.<span class="co">setItem</span>(<span class="cs">'dwelliq_onboarding_v1'</span>, JSON.<span class="co">stringify</span>(data))
+  } <span class="ck">catch</span> {
+    memFallback = data   <span class="cm">// works for the full session duration</span>
   }
 }</pre></div>
       </div>
 
       <div class="insight-card">
         <span class="insight-tag tag-ux">UX Engineering</span>
-        <h3 class="insight-title">Budget tracker must debounce or batch — not recompute on every keystroke</h3>
-        <p class="insight-body">If the budget input field triggers a full re-computation of all recommendations on every keystroke (300ms debounce is the obvious number to reach for), the user sees the A/B/C grid flickering with every character they type. The issue is that <code>recommendations.ts</code>, while fast at &lt;5ms, causes React to re-render the entire results grid on each state update.</p>
-        <p class="insight-body"><strong>Correct pattern:</strong> Separate the "input" state from the "committed" state. The input field updates local state on every keystroke (instant, no recompute). The recommendation engine only runs on blur or when the user explicitly submits the budget — not on change.</p>
-        <div class="code-block"><pre><span class="code-m">// ❌ Wrong — rerenders full grid on every keystroke</span>
-&lt;input onChange={e => setBudgetAndRecompute(e.target.value)} /&gt;
+        <h3 class="insight-title">Budget recalculation must use committed state — not every keystroke — to prevent the results grid from flickering</h3>
+        <p class="insight-body">If the budget input fires <code>generateRecommendations()</code> on every <code>onChange</code> event, the user sees the entire A/B/C grid re-render with every character they type. Even though the engine runs in &lt;5ms, React's reconciler processes a full 5-category × 3-option re-render, causing visible flicker on mid-range devices. A 300ms debounce is the obvious fix but still produces a jarring "settle" animation after typing stops.</p>
+        <p class="insight-body"><strong>Correct pattern:</strong> Separate "input value" from "committed budget". The input field updates local state on every keystroke (instant, no re-render of the grid). The engine only runs on blur or explicit submit.</p>
+        <div class="code-block"><pre><span class="cm">// ❌ Wrong — full grid re-render on every keystroke</span>
+&lt;input onChange={e =&gt; <span class="co">setBudgetAndRecompute</span>(e.target.value)} /&gt;
 
-<span class="code-m">// ✓ Correct — commit on blur/submit only</span>
-<span class="code-c">const</span> [inputValue, setInputValue] = <span class="code-o">useState</span>(budget)
-<span class="code-c">const</span> [committedBudget, setCommittedBudget] = <span class="code-o">useState</span>(budget)
+<span class="cm">// ✓ Correct — two states, recompute only on commit</span>
+<span class="ck">const</span> [inputValue,     setInputValue]     = <span class="co">useState</span>(budget)
+<span class="ck">const</span> [committedBudget, setCommittedBudget] = <span class="co">useState</span>(budget)
 
 &lt;input
   value={inputValue}
-  onChange={e => <span class="code-o">setInputValue</span>(e.target.value)}
-  onBlur={() => <span class="code-o">setCommittedBudget</span>(Number(inputValue))}
+  onChange={e =&gt; <span class="co">setInputValue</span>(e.target.value)}
+  onBlur={() =&gt; <span class="co">setCommittedBudget</span>(Number(inputValue))}
 /&gt;
-<span class="code-m">// useEffect on committedBudget triggers recompute</span></pre></div>
+<span class="cm">// useEffect watches committedBudget → calls generateRecommendations()</span></pre></div>
       </div>
 
       <div class="insight-card">
-        <span class="insight-tag tag-security">Security</span>
-        <h3 class="insight-title">The /api/click handler must validate the SKU — never reflect unvalidated input into a redirect URL</h3>
-        <p class="insight-body">An open redirect vulnerability occurs when a server-side redirect uses unvalidated user input in the destination URL. In the <code>/api/click</code> handler, if you naively construct the affiliate URL by concatenating the user-supplied <code>sku</code> parameter into an Amazon URL, an attacker can craft a URL like <code>/api/click?sku=../../../../evil.com</code> and use your server as an open redirector for phishing attacks.</p>
-        <p class="insight-body"><strong>Correct pattern:</strong> Look up the SKU in the server-side catalog reference (an allowlist). If the SKU is not found, return 400. Never construct the redirect URL from user input directly — only from values that exist in your catalog.</p>
-        <div class="code-block"><pre><span class="code-m">// ❌ Wrong — open redirect via unsanitized sku</span>
-<span class="code-c">const</span> url = `https://amazon.com/dp/${req.query.sku}?tag=${tag}`
-<span class="code-c">return</span> Response.<span class="code-o">redirect</span>(url) <span class="code-m">// attacker controls destination</span>
+        <span class="insight-tag tag-rendering">Browser Rendering</span>
+        <h3 class="insight-title">Cormorant Garamond is a web font — loading it incorrectly causes FOUT on every page load</h3>
+        <p class="insight-body">Cormorant Garamond is Dwelliq's primary heading font — it defines the product's luxury feel. If it's loaded with the default <code>display=swap</code> and no explicit size-adjust, every heading flashes in the fallback serif (Georgia or Times) for 100–400ms before swapping to Cormorant. On large headings (3–4rem), the layout shift is jarring and the CLS score suffers.</p>
+        <p class="insight-body"><strong>Correct pattern:</strong> Use Next.js's built-in <code>next/font/google</code> with <code>display: 'swap'</code> and a <code>variable</code> name. This self-hosts the font via Vercel's CDN (no third-party Google Fonts request), inlines the font-face declaration in the HTML <code>&lt;head&gt;</code>, and allows preconnect to be skipped entirely. Pair with a <code>size-adjust</code> on the fallback stack to minimise layout shift.</p>
+        <div class="code-block"><pre><span class="cm">// ✓ Correct — self-hosted via next/font, no Google Fonts request at runtime</span>
+<span class="ck">import</span> { Cormorant_Garamond } <span class="ck">from</span> <span class="cs">'next/font/google'</span>
 
-<span class="code-m">// ✓ Correct — lookup from allowlist (server-side catalog)</span>
-<span class="code-c">const</span> product = CATALOG.<span class="code-o">find</span>(p => p.id === req.query.sku)
-<span class="code-c">if</span> (!product) <span class="code-c">return</span> <span class="code-c">new</span> Response(<span class="code-s">'Not found'</span>, { status: <span class="code-g">400</span> })
-<span class="code-c">return</span> Response.<span class="code-o">redirect</span>(<span class="code-o">buildAffiliateUrl</span>(product.baseUrl, tag), <span class="code-g">302</span>)</pre></div>
+<span class="ck">const</span> cormorant = <span class="co">Cormorant_Garamond</span>({
+  subsets: [<span class="cs">'latin'</span>],
+  weight: [<span class="cs">'400'</span>, <span class="cs">'600'</span>],
+  style: [<span class="cs">'normal'</span>, <span class="cs">'italic'</span>],
+  display: <span class="cs">'swap'</span>,
+  variable: <span class="cs">'--font-cormorant'</span>,
+})
+<span class="cm">// Apply as className on &lt;html&gt; in layout.tsx → available as CSS var everywhere</span></pre></div>
       </div>
 
     </div>
   </div>
 
-  <!-- ⑤ Risk Register -->
+  <!-- SECTION 5: RISK REGISTER -->
   <div class="doc-section" id="risks">
     <div class="section-label reveal">Section 05</div>
     <h2 class="section-title reveal">Risk Register</h2>
-    <p class="section-lead reveal">Concrete risks across security, reliability, cost, and UX — with mitigations that either already exist in the current design or should be implemented before a public launch.</p>
+    <p class="section-lead reveal">Twelve concrete risks across security, reliability, cost, and UX — rated for a small-scale affiliate product launching on Vercel — with mitigations specific to Dwelliq's stack.</p>
 
-    <div class="reveal" style="overflow-x:auto;">
+    <div class="table-wrap reveal">
       <table class="risk-table">
         <thead>
           <tr>
-            <th>Risk</th>
-            <th>Category</th>
-            <th>Likelihood</th>
-            <th>Impact</th>
+            <th style="width:22%">Risk</th>
+            <th style="width:12%">Category</th>
+            <th style="width:10%">Likelihood</th>
+            <th style="width:10%">Impact</th>
             <th>Mitigation</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Affiliate partner ID exposed in client bundle</strong> — partner tag scraped and used by competitors</td>
+            <td><strong>Affiliate partner ID exposed in client bundle</strong> — partner tag scraped and used to steal commission attribution</td>
             <td><span class="risk-cat cat-security">Security</span></td>
+            <td><span class="risk-level level-high">High</span> without mitigation</td>
             <td><span class="risk-level level-high">High</span></td>
-            <td><span class="risk-level level-high">High</span></td>
-            <td>Use <code>/api/click</code> route handler. Partner ID in <code>AFFILIATE_TAG</code> env var. Never in client code or catalog.ts.</td>
+            <td><strong>Already mitigated:</strong> <code>/api/click</code> route handler owns partner IDs via <code>AFFILIATE_TAG_*</code> env vars. SKU is the only param in the browser URL.</td>
           </tr>
           <tr>
-            <td><strong>Open redirect via unvalidated SKU parameter</strong> — /api/click used as phishing redirector</td>
+            <td><strong>Open redirect via unvalidated sku param</strong> — Dwelliq server used as phishing redirector</td>
             <td><span class="risk-cat cat-security">Security</span></td>
             <td><span class="risk-level level-med">Med</span></td>
             <td><span class="risk-level level-high">High</span></td>
-            <td>SKU allowlist lookup in handler. Return 400 for any SKU not in catalog. Never interpolate query params into URLs.</td>
+            <td><strong>Already mitigated:</strong> CATALOG allowlist lookup in handler — unknown SKU → 400. The redirect URL is built from <code>product.baseUrl</code>, never from raw query params.</td>
           </tr>
           <tr>
-            <td><strong>sessionStorage disabled in private browsing</strong> — onboarding state write throws, app crashes</td>
+            <td><strong>sessionStorage throws in Safari private mode</strong> — uncaught SecurityError crashes React tree → blank screen</td>
             <td><span class="risk-cat cat-reliability">Reliability</span></td>
             <td><span class="risk-level level-med">Med</span></td>
             <td><span class="risk-level level-high">High</span></td>
-            <td>Wrap all sessionStorage calls in try/catch. Fall back to module-level variable. Test explicitly in Safari private mode.</td>
+            <td>Wrap all sessionStorage calls in try/catch with a module-level memory fallback. Test explicitly in Safari private browsing before every release.</td>
           </tr>
           <tr>
-            <td><strong>Stale product prices in catalog</strong> — user clicks through and finds price 30–50% higher than shown</td>
+            <td><strong>Three.js imported at module level crashes SSR build</strong> — <code>window is not defined</code> in Node.js render pass</td>
+            <td><span class="risk-cat cat-reliability">Reliability</span></td>
+            <td><span class="risk-level level-high">High</span> without guard</td>
+            <td><span class="risk-level level-high">High</span></td>
+            <td><strong>Already mitigated:</strong> <code>dynamic(..., {ssr:false})</code> on all Three.js components. Add <code>next build</code> as a required CI step to catch SSR regressions on every PR.</td>
+          </tr>
+          <tr>
+            <td><strong>Stale product prices in catalog.ts</strong> — user clicks through and finds price 30–50% higher than shown</td>
             <td><span class="risk-cat cat-ux">UX</span></td>
             <td><span class="risk-level level-high">High</span></td>
             <td><span class="risk-level level-med">Med</span></td>
-            <td>Add "prices may vary" disclaimer on all product cards. Automate catalog price audits on a weekly deploy schedule. Show price as "~$X" not "$X".</td>
+            <td>Add "~$X · prices may vary" disclaimer on all product cards. Automate a weekly price audit script that flags catalog items deviating more than 15% from the live retailer page.</td>
           </tr>
           <tr>
-            <td><strong>Recommendation engine returns zero results</strong> — rare style/category combo has no matching SKUs</td>
-            <td><span class="risk-cat cat-reliability">Reliability</span></td>
-            <td><span class="risk-level level-low">Low</span></td>
-            <td><span class="risk-level level-high">High</span></td>
-            <td>Engine falls back to style-agnostic ranking. Log the miss for catalog gap analysis. Ensure every category has ≥3 products per style in catalog.</td>
-          </tr>
-          <tr>
-            <td><strong>Three.js bundle crashes SSR</strong> — importing HeroCanvas without ssr:false causes Node build failure</td>
-            <td><span class="risk-cat cat-reliability">Reliability</span></td>
-            <td><span class="risk-level level-high">High</span> if not guarded</td>
-            <td><span class="risk-level level-high">High</span></td>
-            <td>All Three.js imports wrapped in <code>dynamic(..., {ssr: false})</code>. CI build must include a production build step (<code>next build</code>) to catch SSR regressions.</td>
-          </tr>
-          <tr>
-            <td><strong>Vercel hobby plan cold starts on /api/click</strong> — first request after idle period adds 800–1500ms before redirect</td>
+            <td><strong>Cormorant Garamond FOUT on first load</strong> — headings flash in fallback serif, hurting CLS and luxury perception</td>
             <td><span class="risk-cat cat-ux">UX</span></td>
             <td><span class="risk-level level-med">Med</span></td>
-            <td><span class="risk-level level-low">Low</span></td>
-            <td>Upgrade to Vercel Pro for always-warm edge functions once revenue justifies. Short-term: add a loading state on the Buy button so users see feedback during the redirect.</td>
+            <td><span class="risk-level level-med">Med</span></td>
+            <td>Use <code>next/font/google</code> with <code>variable</code> and self-hosting via Vercel CDN. Add <code>font-display: optional</code> for body text if CLS is a priority metric, keeping <code>swap</code> only for headings.</td>
           </tr>
           <tr>
-            <td><strong>Amazon PA-API TOS violation</strong> — displaying cached prices beyond the allowed 24h window</td>
+            <td><strong>Amazon PA-API TOS violation</strong> — if live API is added, cached prices beyond the 24h window violate terms</td>
             <td><span class="risk-cat cat-cost">Cost / Legal</span></td>
-            <td><span class="risk-level level-med">Med</span></td>
+            <td><span class="risk-level level-low">Low</span> (no live API yet)</td>
             <td><span class="risk-level level-high">High</span></td>
-            <td>Current design uses manually-curated static prices — not PA-API. Risk only materialises if live API integration is added. If added: respect 24h TTL strictly; implement a server-side cache with TTL-based invalidation.</td>
+            <td>Current design uses manually-curated static prices — no PA-API. If live API is added: enforce a 24h TTL on all cached price data server-side and add a scheduled job to invalidate stale entries.</td>
           </tr>
           <tr>
-            <td><strong>Competitor scrapes the curated catalog</strong> — 200 manually-sourced SKUs with affiliate tags harvested</td>
-            <td><span class="risk-cat cat-security">Security</span></td>
-            <td><span class="risk-level level-med">Med</span></td>
-            <td><span class="risk-level level-med">Med</span></td>
-            <td>Affiliate tags never in client bundle (mitigated). Catalog data itself is not secret — but move sensitive pricing logic server-side when catalog moves to a database.</td>
-          </tr>
-          <tr>
-            <td><strong>JS bundle size regression</strong> — new dependency bloats bundle above 200 KB gzipped, hurting LCP on mobile</td>
+            <td><strong>JS bundle regression</strong> — new dependency pushes bundle past 200 KB gzipped, hurting LCP on mobile 4G</td>
             <td><span class="risk-cat cat-ux">UX / Perf</span></td>
             <td><span class="risk-level level-med">Med</span></td>
             <td><span class="risk-level level-med">Med</span></td>
-            <td>Add <code>@next/bundle-analyzer</code> to CI. Set a bundle size budget in <code>next.config.ts</code>. Target: &lt;150 KB gzipped for main chunk. Three.js should be lazily loaded (ssr:false).</td>
+            <td>Add <code>@next/bundle-analyzer</code> to CI. Set a size budget in <code>next.config.ts</code>: &lt;150 KB gzipped for the main chunk. Three.js must remain behind <code>dynamic(ssr:false)</code>.</td>
           </tr>
           <tr>
-            <td><strong>Affiliate program suspended or terms changed</strong> — Amazon or Wayfair suspends Dwelliq's affiliate account</td>
+            <td><strong>Recommendation engine returns zero results</strong> — rare style/category combination has no matching SKUs</td>
+            <td><span class="risk-cat cat-reliability">Reliability</span></td>
+            <td><span class="risk-level level-low">Low</span></td>
+            <td><span class="risk-level level-high">High</span></td>
+            <td><strong>Already mitigated:</strong> Engine falls back to style-agnostic rating sort. Ensure every MVP category has ≥3 products per style direction in the catalog. Log misses as <code>console.warn</code> in development for catalog gap tracking.</td>
+          </tr>
+          <tr>
+            <td><strong>Affiliate program suspended</strong> — Amazon or Wayfair account suspended for TOS violation or inactivity</td>
             <td><span class="risk-cat cat-cost">Cost</span></td>
             <td><span class="risk-level level-low">Low</span></td>
             <td><span class="risk-level level-high">High</span></td>
-            <td>Diversify affiliate programs across ≥3 retailers from launch. Store affiliate tags in env vars (not catalog.ts) so they can be swapped without a code deploy.</td>
+            <td>Diversify across ≥3 affiliate programs from launch. Store partner tags in env vars (not catalog.ts) — tag rotation requires one env var change + redeploy, not a catalog update.</td>
           </tr>
           <tr>
-            <td><strong>sessionStorage data structure mismatch after deploy</strong> — old shape in storage causes JSON parse error for returning users</td>
+            <td><strong>sessionStorage schema mismatch after deploy</strong> — old key shape causes JSON parse error for returning users</td>
             <td><span class="risk-cat cat-reliability">Reliability</span></td>
             <td><span class="risk-level level-med">Med</span></td>
             <td><span class="risk-level level-low">Low</span></td>
-            <td>Namespace the storage key with a version suffix: <code>dwelliq_onboarding_v1</code>. On schema change, bump to <code>v2</code> — old key is safely ignored. Always validate and sanitize the parsed object with a type guard before use.</td>
+            <td>Versioned key: <code>dwelliq_onboarding_v1</code>. On any schema change, bump to <code>v2</code> — the old key is silently ignored. Always validate the parsed object with a TypeScript type guard before reading any field.</td>
+          </tr>
+          <tr>
+            <td><strong>Unsplash CDN 403 or rate limit</strong> — product images fail to load, breaking the recommendation grid visually</td>
+            <td><span class="risk-cat cat-reliability">Reliability</span></td>
+            <td><span class="risk-level level-low">Low</span></td>
+            <td><span class="risk-level level-med">Med</span></td>
+            <td><strong>Already mitigated:</strong> <code>RecommendationCard.tsx</code> has an <code>onError</code> handler that renders an emoji fallback. For production: replace Unsplash demo images with CDN-hosted product images served from Vercel's built-in image optimisation (<code>next/image</code>).</td>
           </tr>
         </tbody>
       </table>
@@ -880,25 +949,22 @@ sessionStorage.<span class="code-o">setItem</span>(<span class="code-s">'dwelliq
 
 </div><!-- end page-body -->
 
-<!-- Footer -->
 <footer>
-  <p style="margin-bottom:0.4rem;"><strong>Dwelliq — Architecture & Design Analysis</strong></p>
-  <p>Technical course module &middot; Written by <a href="mailto:shrivastavashubham213@gmail.com">Shubham Shrivastava</a></p>
-  <p style="margin-top:0.4rem;">Generated with <a href="https://github.com/shubhamshrivastava11/pm-portfolio-generator">pm-portfolio-generator</a></p>
+  <p><strong>Dwelliq — AI Home Styling Advisor</strong></p>
+  <p class="footer-divider">Architecture &amp; Design Analysis · Technical Course Module</p>
+  <p>Built by <a href="mailto:shrivastavashubham213@gmail.com">Shubham Shrivastava</a> &middot; Stack: Next.js 16 · TypeScript · Tailwind v4 · Three.js</p>
+  <p style="margin-top:0.5rem;">Generated with <a href="https://github.com/shubhamshrivastava11/pm-portfolio-generator">pm-portfolio-generator</a></p>
 </footer>
 
 <script>
-  // Scroll reveal
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Nav scroll
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
 
-  // Active nav link
   const sections = document.querySelectorAll('[id]');
   const links = document.querySelectorAll('.nav-links a');
   window.addEventListener('scroll', () => {
